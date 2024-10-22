@@ -1,0 +1,179 @@
+/* Reset margin and padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Styling for the App container */
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header styling for flower shop */
+.header {
+  background-color: #FFEEF0; /* Màu hồng nhạt cho cảm giác nhẹ nhàng */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.logo h1 {
+  font-size: 28px;
+  color: #E91E63; /* Màu hồng đậm */
+  font-family: 'Dancing Script', cursive; /* Phong cách chữ mềm mại */
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links li a {
+  color: #333;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px;
+  transition: color 0.3s, background-color 0.3s;
+  border-radius: 5px;
+}
+
+.nav-links li a:hover {
+  background-color: #E91E63;
+  color: white;
+}
+
+/* Main content styling */
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #FDF7F9; /* Màu nền nhẹ nhàng */
+}
+
+/* Footer styling for flower shop */
+.footer {
+  background-color: #FFF0F6; /* Màu nền hồng nhạt */
+  color: #333;
+  text-align: center;
+  padding: 20px 0;
+  position: relative;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between; /* Căn chỉnh hai phần thông tin và mạng xã hội */
+  flex-wrap: wrap; /* Cho phép các phần tử xuống dòng nếu cần */
+}
+
+.footer-info {
+  flex: 1; /* Chiếm một phần không gian */
+}
+
+.footer-social {
+  flex: 1; /* Chiếm một phần không gian */
+  text-align: center; /* Căn giữa nội dung */
+}
+
+.footer-social h4 {
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #E91E63; /* Màu hồng đậm cho tiêu đề */
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center; /* Căn giữa các biểu tượng mạng xã hội */
+  margin-top: 10px;
+}
+
+.social-icons a {
+  margin: 0 10px;
+}
+
+.social-icons img {
+  width: 30px; /* Kích thước biểu tượng mạng xã hội */
+  height: 30px;
+  transition: transform 0.3s;
+}
+
+.social-icons img:hover {
+  transform: scale(1.2); /* Hiệu ứng phóng to khi hover */
+}
+
+/* Background flower decoration */
+.footer-background {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px; /* Chiều cao của hình nền hoa */
+  overflow: hidden;
+}
+
+.footer-background img {
+  width: 100%; /* Để hình ảnh lấp đầy chiều rộng */
+  height: auto; /* Để duy trì tỷ lệ khung hình */
+  opacity: 0.1; /* Độ mờ cho hình nền */
+}
+
+/* Additional styles for buttons and forms */
+button {
+  background-color: #E91E63;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #C2185B;
+}
+
+form {
+  max-width: 400px;
+  margin: 0 auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+label {
+  font-weight: bold;
+}
