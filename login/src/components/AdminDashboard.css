@@ -1,0 +1,83 @@
+/* AdminDashboard.css */
+
+/* Container chính */
+.admin-dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9; /* Màu nền nhẹ */
+    border-radius: 10px; /* Bo tròn các góc */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm shadow cho sự nổi bật */
+  }
+  
+  /* Tiêu đề của dashboard */
+  .dashboard-title {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+  
+  /* Đoạn chào mừng */
+  .dashboard-welcome {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 40px;
+  }
+  
+  /* Container cho các mục quản lý */
+  .dashboard-sections {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  /* Các section con */
+  .dashboard-section {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    flex: 1;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  /* Thêm hiệu ứng khi hover lên section */
+  .dashboard-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Tiêu đề của từng mục */
+  .dashboard-section h2 {
+    font-size: 1.8rem;
+    color: #444;
+    margin-bottom: 10px;
+  }
+  
+  /* Mô tả cho từng mục */
+  .dashboard-section p {
+    font-size: 1rem;
+    color: #777;
+    margin-bottom: 20px;
+  }
+  
+  /* Button quản lý */
+  .dashboard-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #007BFF; /* Màu xanh nổi bật */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Thêm hiệu ứng hover cho button */
+  .dashboard-btn:hover {
+    background-color: #0056b3;
+  }
+  

@@ -1,9 +1,137 @@
+// import React from 'react';
+// import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+// import Register from './components/Register';
+// import Login from './components/Login';
+// import Dashboard from './components/Dashboard';
+// import AdminProductForm from './components/AdminProductForm'; // Import component quản trị viên
+// import Footer from './components/Footer';
+// import './App.css';
+
+// // Private Route Component để bảo vệ các route cần đăng nhập
+// const PrivateRoute = ({ children }) => {
+//   const token = localStorage.getItem('token'); // Kiểm tra token trong localStorage
+//   return token ? children : <Navigate to="/login" />;
+// };
+
+// // Route riêng dành cho admin
+// const AdminRoute = ({ children }) => {
+//   const token = localStorage.getItem('token'); // Kiểm tra token
+//   const role = localStorage.getItem('role'); // Kiểm tra vai trò của người dùng
+//   return token && role === 'admin' ? children : <Navigate to="/login" />;
+// };
+
+// function App() {
+//   return (
+//     <Router>
+//       <div className="App">
+//         {/* Main content */}
+//         <div className="main-content">
+//           <Routes>
+//             {/* Đường dẫn mặc định, chuyển hướng về trang login */}
+//             <Route path="/" element={<Navigate to="/login" />} />
+
+//             {/* Các routes khác */}
+//             <Route path="/register" element={<Register />} />
+//             <Route path="/login" element={<Login />} />
+
+//             {/* Bảo vệ route Dashboard cho user */}
+//             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+
+//             {/* Bảo vệ route AdminProductForm chỉ cho phép admin */}
+//             <Route path="/admin/productform" element={<AdminRoute><AdminProductForm /></AdminRoute>} />
+//           </Routes>
+//         </div>
+
+//         {/* Footer */}
+//         <Footer />
+//       </div>
+//     </Router>
+//   );
+// }
+
+// export default App;
+
+
+// import React from 'react';
+// import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+// import Register from './components/Register';
+// import Login from './components/Login';
+// import Dashboard from './components/Dashboard';
+// import AdminDashboard from './components/AdminDashboard'; // Import component quản trị viên
+// import ManageUsers from './components/ManageUsers'; // Import quản lý user
+// import ManageProducts from './components/ManageProducts'; // Import quản lý sản phẩm
+// import Footer from './components/Footer';
+// import './App.css';
+
+// // Private Route Component để bảo vệ các route cần đăng nhập
+// const PrivateRoute = ({ children }) => {
+//   const token = localStorage.getItem('token'); // Kiểm tra token trong localStorage
+//   return token ? children : <Navigate to="/login" />;
+// };
+
+// // Route riêng dành cho admin
+// const AdminRoute = ({ children }) => {
+//   const token = localStorage.getItem('token'); // Kiểm tra token
+//   const role = localStorage.getItem('role'); // Kiểm tra vai trò của người dùng
+//   return token && role === 'admin' ? children : <Navigate to="/login" />;
+// };
+
+// function App() {
+//   return (
+//     <Router>
+//       <div className="App">
+//         {/* Main content */}
+//         <div className="main-content">
+//           <Routes>
+//             {/* Đường dẫn mặc định, chuyển hướng về trang login */}
+//             <Route path="/" element={<Navigate to="/login" />} />
+
+//             {/* Các routes khác */}
+//             <Route path="/register" element={<Register />} />
+//             <Route path="/login" element={<Login />} />
+
+//             {/* Bảo vệ route Dashboard cho user */}
+//             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+
+//             {/* Bảo vệ các route chỉ cho phép admin */}
+//             <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+//             <Route path="/admin/manage-users" element={<AdminRoute><ManageUsers /></AdminRoute>} />
+//             <Route path="/admin/manage-products" element={<AdminRoute><ManageProducts /></AdminRoute>} />
+//           </Routes>
+//         </div>
+
+//         {/* Footer */}
+//         <Footer />
+//       </div>
+//     </Router>
+//   );
+// }
+
+// export default App;
+
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Register from './components/Register';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
-import './App.css';  // CSS để trang trí
+import AdminDashboard from './components/AdminDashboard'; // Import component quản trị viên
+import ManageUsers from './components/ManageUsers'; // Import quản lý user
+import ManageProducts from './components/ManageProducts'; // Import quản lý sản phẩm
+import Footer from './components/Footer';
+import './App.css';
+
+// Private Route Component để bảo vệ các route cần đăng nhập
+const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem('token'); // Kiểm tra token trong localStorage
+  return token ? children : <Navigate to="/login" />; // Nếu có token, cho phép truy cập, ngược lại chuyển hướng tới login
+};
+
+// Route riêng dành cho admin
+const AdminRoute = ({ children }) => {
+  const token = localStorage.getItem('token'); // Kiểm tra token
+  const role = localStorage.getItem('role'); // Kiểm tra vai trò của người dùng
+  return token && role === 'admin' ? children : <Navigate to="/login" />; // Nếu có token và role là admin, cho phép truy cập, ngược lại chuyển hướng tới login
+};
 
 function App() {
   return (
@@ -12,38 +140,25 @@ function App() {
         {/* Main content */}
         <div className="main-content">
           <Routes>
+            {/* Đường dẫn mặc định, chuyển hướng về trang login */}
+            <Route path="/" element={<Navigate to="/login" />} />
+
+            {/* Các routes khác */}
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+
+            {/* Bảo vệ route Dashboard cho user */}
+            <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+
+            {/* Bảo vệ các route chỉ cho phép admin */}
+            <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+            <Route path="/admin/manage-users" element={<AdminRoute><ManageUsers /></AdminRoute>} />
+            <Route path="/admin/manage-products" element={<AdminRoute><ManageProducts /></AdminRoute>} />
           </Routes>
         </div>
 
         {/* Footer */}
-        <footer className="footer">
-          <div className="footer-content">
-            <div className="footer-info">
-              <p>&copy; 2024 Flower Paradise. All rights reserved.</p>
-              <p>Contact us: info@flowerparadise.com | Phone: +123 456 789</p>
-            </div>
-            <div className="footer-social">
-              <h4>Follow Us</h4>
-              <div className="social-icons">
-                <a href="https://www.facebook.com" target="_blank" rel="noreferrer">
-                  <img src={`${process.env.PUBLIC_URL}/facebook.png`} alt="Facebook" />
-                </a>
-                <a href="https://www.instagram.com" target="_blank" rel="noreferrer">
-                  <img src={`${process.env.PUBLIC_URL}/instagram.png`} alt="Instagram" />
-                </a>
-                <a href="https://www.twitter.com" target="_blank" rel="noreferrer">
-                  <img src={`${process.env.PUBLIC_URL}/twitter.png`} alt="Twitter" />
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="footer-background">
-            <img src={`${process.env.PUBLIC_URL}/background.jpg`} alt="Flower Background" />
-          </div>
-        </footer>
+        <Footer />
       </div>
     </Router>
   );

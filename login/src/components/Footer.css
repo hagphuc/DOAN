@@ -1,0 +1,72 @@
+/* Footer.css */
+.footer {
+    background: linear-gradient(to right, #f3c9c4, #FFB6C1); /* Gradient màu hồng nhạt */
+    color: #333;
+    text-align: center;
+    padding: 15px 0; /* Giảm padding trên và dưới */
+    position: relative;
+    border-top: 1px solid #E91E63; /* Đường viền trên cùng */
+}
+
+.footer-content {
+    max-width: 1200px; /* Kích thước tối đa */
+    margin: 0 auto; /* Căn giữa */
+    padding: 10px; /* Giảm padding cho nội dung */
+    display: flex; /* Sử dụng flexbox để căn chỉnh */
+    justify-content: space-between; /* Căn chỉnh các phần tử */
+    flex-wrap: wrap; /* Cho phép các phần tử xuống dòng */
+}
+
+.footer-info,
+.footer-services,
+.footer-social {
+    flex: 1; /* Mỗi phần chiếm một phần không gian */
+    min-width: 200px; /* Chiều rộng tối thiểu để giữ cấu trúc */
+    margin: 0 10px; /* Thêm khoảng cách giữa các phần */
+}
+
+.footer-info h3 {
+    margin-bottom: 5px; /* Khoảng cách dưới cho tiêu đề */
+}
+
+.footer-services ul {
+    list-style-type: none; /* Bỏ dấu chấm đầu dòng */
+    padding: 0; /* Bỏ khoảng cách bên trong */
+}
+
+.footer-services ul li {
+    margin: 3px 0; /* Giảm khoảng cách giữa các mục */
+}
+
+.footer-services a {
+    color: #E91E63; /* Màu hồng cho liên kết */
+    text-decoration: none; /* Bỏ gạch chân */
+}
+
+.footer-services a:hover {
+    text-decoration: underline; /* Gạch chân khi hover */
+}
+
+.footer-social h4 {
+    margin-bottom: 5px; /* Khoảng cách dưới cho tiêu đề */
+}
+
+.social-icons {
+    display: flex; /* Sử dụng flexbox cho các biểu tượng */
+    justify-content: center; /* Căn giữa */
+    margin-top: 5px; /* Khoảng cách trên */
+}
+
+.social-icons a {
+    margin: 0 5px; /* Giảm khoảng cách giữa các biểu tượng */
+}
+
+.social-icons img {
+    width: 20px; /* Giảm kích thước biểu tượng */
+    height: 20px;
+    transition: transform 0.3s; /* Thêm hiệu ứng chuyển động */
+}
+
+.social-icons img:hover {
+    transform: scale(1.2); /* Hiệu ứng phóng to khi hover */
+}
