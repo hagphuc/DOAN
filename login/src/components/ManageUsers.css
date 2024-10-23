@@ -1,0 +1,71 @@
+/* ManageUsers.css */
+
+.manage-users-container {
+    padding: 20px;
+    background-color: #f9f9f9; /* Màu nền nhẹ */
+    border-radius: 8px; /* Bo góc cho container */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse; /* Gộp các đường biên lại */
+}
+
+.table th,
+.table td {
+    padding: 12px 15px; /* Tăng khoảng cách giữa các ô */
+    text-align: left; /* Canh lề trái */
+    border-bottom: 1px solid #ddd; /* Đường phân cách giữa các hàng */
+}
+
+.table th {
+    background-color: #4caf50; /* Màu nền cho header */
+    color: white; /* Màu chữ cho header */
+}
+
+.table tr:hover {
+    background-color: #f1f1f1; /* Hiệu ứng hover cho hàng */
+}
+
+.add-user-form {
+    display: flex; /* Sử dụng flexbox để căn chỉnh */
+    justify-content: space-between; /* Tạo khoảng cách giữa các phần tử */
+    margin-bottom: 20px; /* Tạo khoảng cách giữa form và bảng */
+    padding: 15px; /* Tạo padding cho form */
+    background-color: #ffffff; /* Nền trắng cho form */
+    border-radius: 5px; /* Bo góc cho form */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+}
+
+.add-user-form input {
+    margin-right: 10px; /* Tạo khoảng cách giữa các input */
+    flex: 1; /* Chiếm toàn bộ chiều rộng */
+}
+
+.add-user-form button {
+    padding: 10px 15px; /* Padding cho nút */
+    background-color: #4caf50; /* Màu nền cho nút */
+    color: white; /* Màu chữ */
+    border: none; /* Không có viền */
+    border-radius: 5px; /* Bo góc cho nút */
+    cursor: pointer; /* Con trỏ khi hover */
+}
+
+.add-user-form button:hover {
+    background-color: #45a049; /* Màu nền khi hover */
+}
+
+/* Thông báo */
+.snackbar {
+    position: fixed;
+    top: 20px; /* Cách từ đỉnh màn hình */
+    right: 20px; /* Cách từ bên phải */
+    background-color: #4caf50; /* Màu nền */
+    color: white; /* Màu chữ */
+    padding: 10px 20px; /* Padding cho thông báo */
+    border-radius: 5px; /* Bo góc cho thông báo */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Đổ bóng cho thông báo */
+    z-index: 1000; /* Đảm bảo thông báo luôn ở trên */
+    transition: opacity 0.5s; /* Hiệu ứng mờ khi ẩn */
+}

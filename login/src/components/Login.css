@@ -1,64 +1,127 @@
-/* Login.css */
+/* Container chính của trang đăng nhập */
 .login-container {
-    max-width: 400px;
+    width: 350px;
     margin: 50px auto;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    background-color: #fff; /* Màu nền trắng */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
+    transition: all 0.3s ease;
 }
 
+.login-container:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Bóng đổ đậm hơn khi hover */
+}
+
+/* Tiêu đề của biểu mẫu */
 h2 {
     text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
     color: #333;
+    font-family: 'Arial', sans-serif;
 }
 
+/* Biểu mẫu đăng nhập */
 .login-form {
     display: flex;
     flex-direction: column;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
+/* Nhãn của các trường nhập liệu */
 label {
+    font-size: 14px;
     font-weight: bold;
     color: #555;
+    margin-bottom: 5px;
+    display: block;
 }
 
+/* Các trường nhập liệu */
 input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
     font-size: 16px;
+    color: #333;
+    width: 100%;
+    background-color: #fafafa;
+    transition: border-color 0.3s ease;
 }
 
+input:focus {
+    border-color: #5cb85c; /* Đổi màu viền khi focus */
+    outline: none;
+    box-shadow: 0 0 5px rgba(92, 184, 92, 0.5); /* Hiệu ứng đổ bóng */
+}
+
+/* Nút đăng nhập */
 .login-button {
-    padding: 10px;
+    padding: 12px;
     border: none;
-    border-radius: 4px;
-    background-color: #5cb85c;
+    border-radius: 6px;
+    background-color: #5cb85c; /* Màu xanh */
     color: white;
     font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
+    text-transform: uppercase;
     transition: background-color 0.3s ease;
 }
 
 .login-button:hover {
-    background-color: #4cae4c;
+    background-color: #4cae4c; /* Đổi màu khi hover */
 }
 
-.register-link {
+/* Phần hiển thị thông báo lỗi */
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
     text-align: center;
+}
+
+/* Liên kết đăng ký */
+.register-link {
     margin-top: 20px;
+    text-align: center;
 }
 
 .register-link a {
     color: #5cb85c;
     text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
 }
 
 .register-link a:hover {
+    color: #4cae4c;
     text-decoration: underline;
+}
+
+/* Responsive cho thiết bị nhỏ */
+@media (max-width: 400px) {
+    .login-container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+}
+/* Phần hiển thị thông báo lỗi */
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+    background-color: #f8d7da; /* Màu nền nhẹ để báo lỗi */
+    padding: 10px;
+    border-radius: 5px;
 }

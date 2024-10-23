@@ -1,32 +1,41 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Nhập useNavigate từ react-router-dom
+import { useNavigate, Link } from 'react-router-dom'; // Nhập Link từ react-router-dom
 import './register.css'; // Đảm bảo bạn có file CSS này
 
 const Register = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errors, setErrors] = useState({}); // Trạng thái để lưu lỗi cho từng trường
     const [message, setMessage] = useState('');
     const [showMessage, setShowMessage] = useState(false); // Trạng thái để hiển thị thông báo
 
     const navigate = useNavigate(); // Khởi tạo useNavigate
 
+    const validateForm = () => {
+        const formErrors = {};
+
+        // Kiểm tra từng trường và tạo lỗi tương ứng
+        if (!username) formErrors.username = 'Vui lòng nhập tên người dùng.';
+        if (!email) formErrors.email = 'Vui lòng nhập email.';
+        if (!password) formErrors.password = 'Vui lòng nhập mật khẩu.';
+
+        return formErrors;
+    };
+
     const handleRegister = async (e) => {
         e.preventDefault();
 
-        // Kiểm tra xem tất cả các trường đã được điền chưa
-        if (!username || !email || !password) {
-            setMessage('Vui lòng điền đầy đủ thông tin.');
-            setShowMessage(true);
-            setTimeout(() => {
-                setShowMessage(false);
-            }, 5000);
+        // Validate form
+        const formErrors = validateForm();
+        if (Object.keys(formErrors).length > 0) {
+            setErrors(formErrors);
             return;
         }
 
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/register', {  // Chú ý URL đầy đủ
+            const response = await axios.post('http://localhost:5000/api/auth/register', {  
                 username,
                 email,
                 password
@@ -64,8 +73,8 @@ const Register = () => {
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        required
                     />
+                    {errors.username && <p className="error-message">{errors.username}</p>} {/* Hiển thị lỗi nếu có */}
                 </div>
                 <div className="form-group">
                     <label>Email:</label>
@@ -73,8 +82,8 @@ const Register = () => {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        required
                     />
+                    {errors.email && <p className="error-message">{errors.email}</p>} {/* Hiển thị lỗi nếu có */}
                 </div>
                 <div className="form-group">
                     <label>Mật khẩu:</label>
@@ -82,16 +91,22 @@ const Register = () => {
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        required
                     />
+                    {errors.password && <p className="error-message">{errors.password}</p>} {/* Hiển thị lỗi nếu có */}
                 </div>
                 <button type="submit" className="register-button">Đăng Ký</button>
             </form>
+            
             {showMessage && (
                 <div className="message-container">
                     <p className="message">{message}</p>
                 </div>
             )}
+
+            {/* Thêm liên kết quay về trang đăng nhập */}
+            <div className="login-redirect">
+                <p>Bạn đã có tài khoản? <Link to="/login">Đăng nhập</Link></p>
+            </div>
         </div>
     );
 };

@@ -39,32 +39,6 @@ const authAdmin = require('../middleware/authAdmin');
  */
 
 // Đăng ký người dùng
-// router.post('/register', async (req, res) => {
-//     const { username, email, password, role } = req.body;
-
-//     try {
-//         let user = await User.findOne({ email });
-//         if (user) return res.status(400).json({ msg: 'User already exists' });
-
-//         // Kiểm tra vai trò có hợp lệ hay không
-//         if (role && !['user', 'admin'].includes(role)) {
-//             return res.status(400).json({ msg: 'Role is invalid. Choose either "user" or "admin"' });
-//         }
-
-//         // Mã hóa mật khẩu trước khi lưu
-
-//         const hashedPassword = await bcrypt.hash(password, 10);
-//         user = new User({ username, email, password: hashedPassword , role: role || 'user' }); // Mặc định là user nếu không có
-//         await user.save();
-        
-//         res.status(200).json({ msg: 'Đăng ký tài khoản thành công!' });
-//     } catch (err) {
-//         console.error(err); // Log lỗi để kiểm tra
-//         res.status(500).send('Server error');
-//     }
-// });
-// authRoutes.js
-
 router.post('/register', async (req, res) => {
     const { username, email, password, role } = req.body;
 
@@ -96,14 +70,13 @@ router.post('/register', async (req, res) => {
     }
 });
 
-
 // @swagger /api/auth/login
 /**
  * @swagger
  * /api/auth/login:
  *   post:
  *     summary: Đăng nhập User
- *     description: Authenticate user and return a JWT token
+ *     description: Authenticate user and return a JWT token along with the user's role
  *     tags:
  *       - User
  *     requestBody:
@@ -119,34 +92,132 @@ router.post('/register', async (req, res) => {
  *                 type: string
  *     responses:
  *       200:
- *         description: Login successful, returns JWT token
+ *         description: Login successful, returns JWT token and user's role
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *                   description: Vai trò của người dùng
  *       400:
  *         description: Invalid credentials
  */
-// Đăng nhập người dùng
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
         // Tìm người dùng theo email
         const user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ msg: 'Invalid credentials' });
+        if (!user) return res.status(400).json({ msg: 'Email không tồn tại!' });
 
         // Kiểm tra mật khẩu
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
+        if (!isMatch) return res.status(400).json({ msg: 'Mật khẩu không đúng!' });
 
         // Tạo token
         const payload = { userId: user._id };
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.json({ token });
+        // Trả về token và role của người dùng
+        res.json({ token, role: user.role });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
     }
 });
 
+// @swagger /api/auth/update/{id}
+/**
+ * @swagger
+ * /api/auth/update/{id}:
+ *   put:
+ *     summary: Cập nhật thông tin User
+ *     description: Admin có thể cập nhật thông tin người dùng theo ID
+ *     tags:
+ *       - Admin
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID của người dùng cần cập nhật
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: [user, admin]
+ *     responses:
+ *       200:
+ *         description: Cập nhật người dùng thành công
+ *       400:
+ *         description: Thông tin không hợp lệ
+ *       404:
+ *         description: Không tìm thấy người dùng
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+// Cập nhật thông tin người dùng (chỉ dành cho quản trị viên)
+router.put('/update/:id', authAdmin, async (req, res) => {
+    const { username, email, password, role } = req.body;
+
+    try {
+        // Tìm người dùng theo ID
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+
+        // Kiểm tra nếu username đã tồn tại
+        if (username && user.username !== username) {
+            const existingUser = await User.findOne({ username });
+            if (existingUser) return res.status(400).json({ msg: 'Username đã được sử dụng' });
+            user.username = username;
+        }
+
+        // Kiểm tra nếu email đã tồn tại
+        if (email && user.email !== email) {
+            const existingEmail = await User.findOne({ email });
+            if (existingEmail) return res.status(400).json({ msg: 'Email đã được sử dụng' });
+            user.email = email;
+        }
+
+        // Cập nhật vai trò nếu có
+        if (role && !['user', 'admin'].includes(role)) {
+            return res.status(400).json({ msg: 'Role is invalid. Choose either "user" or "admin"' });
+        } else if (role) {
+            user.role = role;
+        }
+
+        // Cập nhật mật khẩu nếu có
+        if (password) {
+            user.password = await bcrypt.hash(password, 10);
+        }
+
+        // Lưu thông tin người dùng đã cập nhật
+        await user.save();
+
+        res.json({ msg: 'Cập nhật người dùng thành công!' });
+    } catch (err) {
+        console.error('Server error:', err);
+        res.status(500).json({ msg: 'Server error' });
+    }
+});
 
 // @swagger /api/auth/delete/{id}
 /**
@@ -212,7 +283,6 @@ router.delete('/delete/:id', authAdmin, async (req, res) => {
  *       500:
  *         description: Lỗi máy chủ
  */
-// @swagger /api/auth/users
 router.get('/users', authAdmin, async (req, res) => {
     try {
         const users = await User.find().select('-password');
