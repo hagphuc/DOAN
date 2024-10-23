@@ -9,20 +9,6 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {/* Header */}
-        <header className="header">
-          <nav className="navbar">
-            <div className="logo">
-              <img src={`${process.env.PUBLIC_URL}/logo2.jpg`} alt="Flower" />
-              <h1>Flower Paradise</h1> {/* Tên shop bán hoa */}
-            </div>
-            <ul className="nav-links">
-              <li><Link to="/">Home</Link></li>
-              <li><Link to="/login">Login</Link></li>
-            </ul>
-          </nav>
-        </header>
-
         {/* Main content */}
         <div className="main-content">
           <Routes>

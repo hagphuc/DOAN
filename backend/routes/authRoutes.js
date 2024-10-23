@@ -39,32 +39,6 @@ const authAdmin = require('../middleware/authAdmin');
  */
 
 // Đăng ký người dùng
-// router.post('/register', async (req, res) => {
-//     const { username, email, password, role } = req.body;
-
-//     try {
-//         let user = await User.findOne({ email });
-//         if (user) return res.status(400).json({ msg: 'User already exists' });
-
-//         // Kiểm tra vai trò có hợp lệ hay không
-//         if (role && !['user', 'admin'].includes(role)) {
-//             return res.status(400).json({ msg: 'Role is invalid. Choose either "user" or "admin"' });
-//         }
-
-//         // Mã hóa mật khẩu trước khi lưu
-
-//         const hashedPassword = await bcrypt.hash(password, 10);
-//         user = new User({ username, email, password: hashedPassword , role: role || 'user' }); // Mặc định là user nếu không có
-//         await user.save();
-        
-//         res.status(200).json({ msg: 'Đăng ký tài khoản thành công!' });
-//     } catch (err) {
-//         console.error(err); // Log lỗi để kiểm tra
-//         res.status(500).send('Server error');
-//     }
-// });
-// authRoutes.js
-
 router.post('/register', async (req, res) => {
     const { username, email, password, role } = req.body;
 
@@ -123,7 +97,6 @@ router.post('/register', async (req, res) => {
  *       400:
  *         description: Invalid credentials
  */
-// Đăng nhập người dùng
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 

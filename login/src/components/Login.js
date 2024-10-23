@@ -50,8 +50,6 @@ const Login = () => {
                 <button type="submit" className="login-button">Đăng Nhập</button>
             </form>
             {message && <p>{message}</p>} {/* Hiển thị thông báo */}
-            
-            {/* Phần đăng ký bên dưới form đăng nhập */}
             <div className="register-link">
                 <p>Chưa có tài khoản? <Link to="/register">Đăng ký ngay</Link></p>
             </div>

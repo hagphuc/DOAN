@@ -64,7 +64,6 @@ const Register = () => {
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        required
                     />
                 </div>
                 <div className="form-group">
@@ -73,7 +72,6 @@ const Register = () => {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        required
                     />
                 </div>
                 <div className="form-group">
@@ -82,16 +80,10 @@ const Register = () => {
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        required
                     />
                 </div>
                 <button type="submit" className="register-button">Đăng Ký</button>
             </form>
-            {showMessage && (
-                <div className="message-container">
-                    <p className="message">{message}</p>
-                </div>
-            )}
         </div>
     );
 };
