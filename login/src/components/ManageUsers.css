@@ -1,71 +1,120 @@
 /* ManageUsers.css */
 
-.manage-users-container {
-    padding: 20px;
-    background-color: #f9f9f9; /* Màu nền nhẹ */
-    border-radius: 8px; /* Bo góc cho container */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+/* Container chính */
+.container {
+    max-width: 1400px; /* Giới hạn chiều rộng của container */
+    margin: 0 auto; /* Giữa màn hình */
+    padding: 40px; /* Padding cho container */
 }
 
-.table {
-    width: 100%;
-    border-collapse: collapse; /* Gộp các đường biên lại */
+/* Nội dung dashboard */
+.dashboard-content {
+    margin-bottom: 30px; /* Khoảng cách dưới cùng */
 }
 
-.table th,
-.table td {
-    padding: 12px 15px; /* Tăng khoảng cách giữa các ô */
-    text-align: left; /* Canh lề trái */
-    border-bottom: 1px solid #ddd; /* Đường phân cách giữa các hàng */
+/* Tiêu đề */
+.title {
+    font-size: 2rem; /* Kích thước chữ lớn */
+    color: #333; /* Màu chữ */
+    text-align: center; /* Căn giữa tiêu đề */
 }
 
-.table th {
-    background-color: #4caf50; /* Màu nền cho header */
-    color: white; /* Màu chữ cho header */
+/* Phần form thêm và chỉnh sửa người dùng */
+.form-section {
+    margin: 20px 0; /* Khoảng cách trên và dưới */
+    padding: 20px; /* Padding cho phần form */
+    border: 2px solid #3f51b5; /* Đường viền dày hơn và màu sắc nổi bật */
+    border-radius: 8px; /* Bo góc */
+    background-color: #f9f9f9; /* Màu nền sáng */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Thêm bóng cho phần form */
+}
+/* Tiêu đề trong form */
+.form-section h6 {
+    margin-bottom: 15px; /* Khoảng cách dưới cùng */
+    color: #555; /* Màu chữ tiêu đề */
 }
 
-.table tr:hover {
-    background-color: #f1f1f1; /* Hiệu ứng hover cho hàng */
+/* Cấu hình cho bảng hiển thị danh sách người dùng */
+.table-container {
+    margin: 20px 0; /* Khoảng cách trên và dưới của bảng */
+    border: 2px solid #3f51b5; /* Đường viền nổi bật cho bảng */
+    border-radius: 8px; /* Bo góc cho bảng */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Thêm bóng cho bảng */
+    overflow: hidden; /* Đảm bảo các góc bo được hiển thị đúng */
 }
 
-.add-user-form {
-    display: flex; /* Sử dụng flexbox để căn chỉnh */
-    justify-content: space-between; /* Tạo khoảng cách giữa các phần tử */
-    margin-bottom: 20px; /* Tạo khoảng cách giữa form và bảng */
-    padding: 15px; /* Tạo padding cho form */
-    background-color: #ffffff; /* Nền trắng cho form */
-    border-radius: 5px; /* Bo góc cho form */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+/* Định dạng bảng */
+.MuiTable {
+    border-collapse: collapse; /* Gộp các viền bảng lại */
+    width: 100%; /* Đầy đủ chiều rộng */
 }
 
-.add-user-form input {
-    margin-right: 10px; /* Tạo khoảng cách giữa các input */
-    flex: 1; /* Chiếm toàn bộ chiều rộng */
+/* Định dạng ô bảng */
+.MuiTableCell {
+    border: 2px solid #3f51b5; /* Đường viền xung quanh ô (độ dày 2px, màu sắc xanh) */
+    padding: 12px; /* Padding cho ô */
 }
 
-.add-user-form button {
-    padding: 10px 15px; /* Padding cho nút */
-    background-color: #4caf50; /* Màu nền cho nút */
-    color: white; /* Màu chữ */
-    border: none; /* Không có viền */
-    border-radius: 5px; /* Bo góc cho nút */
-    cursor: pointer; /* Con trỏ khi hover */
+/* Tiêu đề ô bảng */
+.MuiTableHead {
+    background-color: #3f51b5; /* Màu nền tiêu đề bảng */
+    color: #fff; /* Màu chữ tiêu đề bảng */
+    font-weight: bold; /* Chữ đậm */
 }
 
-.add-user-form button:hover {
-    background-color: #45a049; /* Màu nền khi hover */
+/* Định dạng hàng trong bảng */
+.MuiTableRow:hover {
+    background-color: #f5f5f5; /* Màu nền khi hover */
 }
 
-/* Thông báo */
-.snackbar {
-    position: fixed;
-    top: 20px; /* Cách từ đỉnh màn hình */
-    right: 20px; /* Cách từ bên phải */
-    background-color: #4caf50; /* Màu nền */
-    color: white; /* Màu chữ */
-    padding: 10px 20px; /* Padding cho thông báo */
-    border-radius: 5px; /* Bo góc cho thông báo */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Đổ bóng cho thông báo */
-    z-index: 1000; /* Đảm bảo thông báo luôn ở trên */
-    transition: opacity 0.5s; /* Hiệu ứng mờ khi ẩn */
+/* Snackbar thông báo */
+.MuiSnackbar {
+    z-index: 1500; /* Đảm bảo snackbar nằm trên các thành phần khác */
+}
+
+/* Định dạng các TextField */
+.MuiTextField-root {
+    margin-bottom: 16px; /* Khoảng cách dưới cho các TextField */
+}
+
+/* Định dạng tiêu đề bảng */
+.MuiTableHead-root {
+    background: linear-gradient(to right, #f3c9c4, #FFB6C1); /* Màu nền cho tiêu đề bảng */
+    color: white; /* Màu chữ cho tiêu đề bảng */
+}
+
+/* Định dạng ô tiêu đề */
+.MuiTableCell-head {
+    font-weight: bold; /* Làm đậm chữ */
+    text-align: center; /* Căn giữa cho tiêu đề */
+}
+
+/* Định dạng hàng bảng */
+.MuiTableBody-root {
+    background-color: #ffffff; /* Màu nền cho hàng bảng */
+}
+
+/* Định dạng các ô trong hàng bảng */
+.MuiTableCell-body {
+    text-align: center; /* Căn giữa cho các ô */
+    padding: 16px; /* Padding cho các ô */
+}
+
+/* Đổi màu hàng khi hover */
+.MuiTableRow-root:hover {
+    background-color: #f1f1f1; /* Màu nền cho hàng khi hover */
+}
+
+/* Định dạng cho nút trong bảng */
+.MuiButton {
+    margin: 5px; /* Khoảng cách giữa các nút */
+}
+
+.custom-button {
+    transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu */
+}
+
+.custom-button:hover {
+    background-color: #4caf50; /* Màu xanh lá cây */
+    color: white; /* Đổi màu chữ sang trắng */
 }

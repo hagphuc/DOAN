@@ -4,7 +4,9 @@ const router = express.Router();
 const Product = require('../models/Product');
 const authAdmin = require('../middleware/authAdmin');
 const upload = require('../middleware/upload'); // Import middleware upload
-
+const authUser = require('../middleware/authUser');
+const fs = require('fs');
+const path = require('path');
 /**
  * @swagger
  * tags:
@@ -24,7 +26,8 @@ const upload = require('../middleware/upload'); // Import middleware upload
  *       500:
  *         description: Server error
  */
-router.get('/', async (req, res) => { // Xóa middleware authAdmin
+// Route lấy danh sách sản phẩm - Yêu cầu người dùng đăng nhập
+router.get('/', authUser, async (req, res) => {
     try {
         const products = await Product.find();
         res.json(products);
@@ -54,7 +57,8 @@ router.get('/', async (req, res) => { // Xóa middleware authAdmin
  *       500:
  *         description: Server error
  */
-router.get('/:id', authAdmin,async (req, res) => { // Xóa middleware authAdmin
+// Route lấy sản phẩm theo ID - Yêu cầu người dùng đăng nhập
+router.get('/:id', authUser, async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
         if (!product) {
@@ -193,20 +197,49 @@ router.put('/:id', authAdmin, upload.single('image'), async (req, res) => {
  *       500:
  *         description: Server error
  */
+// Route xóa sản phẩm theo ID - Yêu cầu người dùng đăng nhập
 router.delete('/:id', authAdmin, async (req, res) => {
     try {
-        console.log('Đang cố gắng xóa sản phẩm với ID:', req.params.id); // Log ID
-        const product = await Product.findByIdAndDelete(req.params.id); // Sử dụng findByIdAndDelete
-        
+        // Tìm sản phẩm theo ID
+        const product = await Product.findById(req.params.id);
         if (!product) {
             return res.status(404).json({ msg: 'Sản phẩm không tìm thấy' });
         }
 
-        console.log('Sản phẩm đã được xóa thành công'); // Log khi xóa thành công
+        // Đường dẫn ảnh từ database (phải là đường dẫn tương đối từ 'uploads')
+        const relativeImagePath = product.imageUrl;
+
+        // Kiểm tra nếu có đường dẫn ảnh trong sản phẩm
+        if (relativeImagePath) {
+            // Tạo đường dẫn tuyệt đối đến ảnh dựa trên cấu trúc "backend/uploads"
+            const absoluteImagePath = path.resolve(__dirname, '..', relativeImagePath);
+
+            // In ra console đường dẫn ảnh để kiểm tra
+            console.log('Đường dẫn ảnh tuyệt đối:', absoluteImagePath);
+
+            // Kiểm tra nếu ảnh tồn tại
+            if (fs.existsSync(absoluteImagePath)) {
+                // Ảnh tồn tại, tiến hành xóa
+                fs.unlink(absoluteImagePath, (err) => {
+                    if (err) {
+                        console.error('Lỗi khi xóa ảnh:', err); // Log lỗi nếu việc xóa thất bại
+                        return res.status(500).json({ msg: 'Lỗi khi xóa ảnh', error: err.message });
+                    } else {
+                        console.log('Ảnh đã được xóa thành công');
+                    }
+                });
+            } else {
+                console.log('Ảnh không tồn tại tại đường dẫn:', absoluteImagePath); // Log nếu ảnh không tồn tại
+            }
+        }
+
+        // Xóa sản phẩm khỏi cơ sở dữ liệu
+        await Product.findByIdAndDelete(req.params.id);
         res.json({ msg: 'Sản phẩm đã được xóa thành công' });
     } catch (err) {
-        console.error('Lỗi khi xóa sản phẩm:', err); // Log lỗi chi tiết
-        res.status(500).json({ msg: 'Lỗi máy chủ', error: err.message }); // Trả về thông tin lỗi
+        console.error('Lỗi khi xóa sản phẩm:', err);
+        res.status(500).json({ msg: 'Lỗi máy chủ', error: err.message });
     }
 });
+
 module.exports = router;

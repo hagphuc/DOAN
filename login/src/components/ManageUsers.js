@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import {
     Table,
@@ -11,9 +11,14 @@ import {
     Button,
     TextField,
     Typography,
+    CircularProgress,
     Grid,
     Snackbar,
     Alert as MuiAlert,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
 } from '@mui/material';
 import './ManageUsers.css'; // Nhập file CSS
 import HeaderAdmin from './HeaderAdmin'; // Đảm bảo đường dẫn đúng
@@ -25,15 +30,13 @@ const ManageUsers = () => {
     const [loading, setLoading] = useState(false);
     const [newUser, setNewUser] = useState({ username: '', email: '', role: '', password: '' });
     const [editUserId, setEditUserId] = useState(null);
-    const [editUser, setEditUser] = useState({ username: '', email: '', role: '', password: '' });
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false); // Thêm state cho dialog
+    const [confirmDeleteDialogOpen, setConfirmDeleteDialogOpen] = useState(false); // State cho dialog xác nhận xóa
+    const [userIdToDelete, setUserIdToDelete] = useState(null); // ID người dùng để xóa
+    const [hoverButton, setHoverButton] = useState(null); // Thêm state để theo dõi hover
 
-    const [snackbarOpen, setSnackbarOpen] = useState(false); // State cho Snackbar
-
-    useEffect(() => {
-        fetchUsers();
-    }, []);
-
-    const fetchUsers = async () => {
+    const fetchUsers = useCallback(async () => {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
@@ -45,12 +48,17 @@ const ManageUsers = () => {
             setUsers(response.data);
         } catch (err) {
             setError('Lỗi khi lấy danh sách người dùng.');
+            setSnackbarOpen(true);
         } finally {
             setLoading(false);
         }
-    };
+    }, []); // Chỉ cần chạy một lần
 
-    const handleDelete = async (userId) => {
+    useEffect(() => {
+        fetchUsers();
+    }, [fetchUsers]); // Thêm fetchUsers vào mảng phụ thuộc
+
+    const handleDeleteUser = async (userId) => {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
@@ -60,11 +68,11 @@ const ManageUsers = () => {
                 },
             });
             setSuccess('Xóa người dùng thành công!');
-            setSnackbarOpen(true); // Mở Snackbar
+            setSnackbarOpen(true);
             fetchUsers();
         } catch (err) {
             setError('Lỗi khi xóa người dùng.');
-            setSnackbarOpen(true); // Mở Snackbar
+            setSnackbarOpen(true);
         } finally {
             setLoading(false);
         }
@@ -80,12 +88,12 @@ const ManageUsers = () => {
                 },
             });
             setSuccess('Thêm người dùng thành công!');
-            setSnackbarOpen(true); // Mở Snackbar
-            setNewUser({ username: '', email: '', role: '', password: '' });
+            setSnackbarOpen(true);
+            handleCloseDialog(); // Đóng dialog sau khi thêm
             fetchUsers();
         } catch (err) {
             setError(err.response?.data?.msg || 'Lỗi khi thêm người dùng.');
-            setSnackbarOpen(true); // Mở Snackbar
+            setSnackbarOpen(true);
         } finally {
             setLoading(false);
         }
@@ -93,29 +101,40 @@ const ManageUsers = () => {
 
     const handleEditUser = (user) => {
         setEditUserId(user._id);
-        setEditUser({ username: user.username, email: user.email, role: user.role, password: '' });
+        setNewUser({ username: user.username, email: user.email, role: user.role, password: '' });
+        setDialogOpen(true); // Mở dialog khi chỉnh sửa
     };
 
     const handleUpdateUser = async () => {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            await axios.put(`http://localhost:5000/api/auth/update/${editUserId}`, editUser, {
+            await axios.put(`http://localhost:5000/api/auth/update/${editUserId}`, newUser, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
             setSuccess('Cập nhật người dùng thành công!');
-            setSnackbarOpen(true); // Mở Snackbar
-            setEditUserId(null);
-            setEditUser({ username: '', email: '', role: '', password: '' });
+            setSnackbarOpen(true);
+            handleCloseDialog(); // Đóng dialog sau khi cập nhật
             fetchUsers();
         } catch (err) {
             setError(err.response?.data?.msg || 'Lỗi khi cập nhật người dùng.');
-            setSnackbarOpen(true); // Mở Snackbar
+            setSnackbarOpen(true);
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleOpenDialog = () => {
+        setEditUserId(null); // Đặt lại ID khi mở dialog để thêm
+        setNewUser({ username: '', email: '', role: '', password: '' });
+        setDialogOpen(true);
+    };
+
+    const handleCloseDialog = () => {
+        setDialogOpen(false);
+        setEditUserId(null); // Đặt lại ID khi đóng dialog
     };
 
     const handleCloseSnackbar = () => {
@@ -124,74 +143,50 @@ const ManageUsers = () => {
         setSuccess('');
     };
 
-    return (
-        <div className="container">
-            <HeaderAdmin />
-            <Typography variant="h4" gutterBottom className="title">Quản Lý Người Dùng</Typography>
+    const handleDelete = (userId) => {
+        setUserIdToDelete(userId); // Lưu ID người dùng để xóa
+        setConfirmDeleteDialogOpen(true); // Mở dialog xác nhận
+    };
 
-            <Snackbar 
-                open={snackbarOpen} 
-                autoHideDuration={5000} 
-                onClose={handleCloseSnackbar} 
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }} // Vị trí góc trên bên phải
+    const handleCloseConfirmDeleteDialog = () => {
+        setConfirmDeleteDialogOpen(false);
+        setUserIdToDelete(null); // Đặt lại ID khi đóng dialog
+    };
+
+    return (
+        <div className="manage-users">
+            <HeaderAdmin />
+            <Typography variant="h4" gutterBottom className="title" style={{ marginTop: '80px' }}>
+                Quản Lý Người Dùng
+            </Typography>
+
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={5000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
                 <MuiAlert severity={success ? 'success' : 'error'} sx={{ width: '100%' }}>
                     {success || error}
                 </MuiAlert>
             </Snackbar>
 
-            {/* Form thêm người dùng mới */}
-            <Grid container spacing={2} className="form-section">
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        label="Tên người dùng"
-                        variant="outlined"
-                        value={newUser.username}
-                        onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        label="Email"
-                        variant="outlined"
-                        value={newUser.email}
-                        onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        label="Vai trò"
-                        variant="outlined"
-                        value={newUser.role}
-                        onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        label="Mật khẩu"
-                        variant="outlined"
-                        type="password"
-                        value={newUser.password}
-                        onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                            <TextField
-                                label="Mật khẩu (để trống nếu không thay đổi)"
-                                variant="outlined"
-                                type="password"
-                                value={editUser.password}
-                                onChange={(e) => setEditUser({ ...editUser, password: e.target.value })}
-                                fullWidth
-                            />
-                        </Grid>
-                    </Grid>
-                </div>
-            )}
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleOpenDialog}
+                style={{ marginBottom: '20px' }}
+                onMouseEnter={() => setHoverButton('add')}
+                onMouseLeave={() => setHoverButton(null)}
+                sx={{
+                    backgroundColor: hoverButton === 'add' ? '#4caf50' : undefined,
+                    '&:hover': {
+                        backgroundColor: '#4caf50', // Màu xanh lá cây khi hover
+                    },
+                }}
+            >
+                Thêm Người Dùng
+            </Button>
 
             {/* Bảng hiển thị danh sách người dùng */}
             <TableContainer component={Paper} className="table-container">
@@ -202,11 +197,11 @@ const ManageUsers = () => {
                             <TableCell>Tên</TableCell>
                             <TableCell>Email</TableCell>
                             <TableCell>Vai trò</TableCell>
-                            <TableCell>Hành động</TableCell>
+                            <TableCell>Thao tác</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {users.map(user => (
+                        {users.map((user) => (
                             <TableRow key={user._id}>
                                 <TableCell>{user._id}</TableCell>
                                 <TableCell>{user.username}</TableCell>
@@ -214,17 +209,19 @@ const ManageUsers = () => {
                                 <TableCell>{user.role}</TableCell>
                                 <TableCell>
                                     <Button
-                                        variant="contained"
+                                        variant="outlined"
                                         color="primary"
                                         onClick={() => handleEditUser(user)}
-                                        style={{ marginRight: '10px' }}
+                                        className="custom-button"
+                                        style={{ marginRight: '8px' }}
                                     >
-                                        Sửa
+                                        Chỉnh sửa
                                     </Button>
                                     <Button
-                                        variant="contained"
+                                        variant="outlined"
                                         color="secondary"
-                                        onClick={() => handleDelete(user._id)}
+                                        onClick={() => handleDelete(user._id)} // Mở dialog xác nhận
+                                        className="custom-button"
                                     >
                                         Xóa
                                     </Button>
@@ -234,6 +231,129 @@ const ManageUsers = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+
+            {/* Dialog thêm/sửa người dùng */}
+            <Dialog 
+                open={dialogOpen} 
+                onClose={handleCloseDialog} 
+                maxWidth="sm" // Đặt chiều rộng tối đa của dialog
+                fullWidth // Chiếm toàn bộ chiều rộng
+            >
+                <DialogTitle>{editUserId ? 'Chỉnh Sửa Người Dùng' : 'Thêm Người Dùng'}</DialogTitle>
+                <DialogContent style={{ padding: '16px 24px', minHeight: '300px' }}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Tên người dùng"
+                                variant="outlined"
+                                value={newUser.username}
+                                onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Email"
+                                variant="outlined"
+                                value={newUser.email}
+                                onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Vai trò"
+                                variant="outlined"
+                                value={newUser.role}
+                                onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Mật khẩu (để trống nếu không thay đổi)"
+                                variant="outlined"
+                                type="password"
+                                value={newUser.password}
+                                onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                                fullWidth
+                            />
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={handleCloseDialog}
+                        color="secondary"
+                        onMouseEnter={() => setHoverButton('cancel')}
+                        onMouseLeave={() => setHoverButton(null)}
+                        sx={{
+                            backgroundColor: hoverButton === 'cancel' ? '#4caf50' : undefined,
+                            '&:hover': {
+                                backgroundColor: '#4caf50', // Màu xanh lá cây khi hover
+                            },
+                        }}
+                    >
+                        Hủy
+                    </Button>
+                    <Button
+                        onClick={editUserId ? handleUpdateUser : handleAddUser}
+                        color="primary"
+                        disabled={loading}
+                        onMouseEnter={() => setHoverButton(editUserId ? 'update' : 'add')}
+                        onMouseLeave={() => setHoverButton(null)}
+                        sx={{
+                            backgroundColor: hoverButton === (editUserId ? 'update' : 'add') ? '#4caf50' : undefined,
+                            '&:hover': {
+                                backgroundColor: '#4caf50', // Màu xanh lá cây khi hover
+                            },
+                        }}
+                    >
+                        {loading ? <CircularProgress size={24} /> : (editUserId ? 'Cập Nhật' : 'Thêm')}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Dialog xác nhận xóa người dùng */}
+            <Dialog
+                open={confirmDeleteDialogOpen}
+                onClose={handleCloseConfirmDeleteDialog}
+                maxWidth="sm"
+                fullWidth
+            >
+                <DialogTitle>Xác Nhận Xóa</DialogTitle>
+                <DialogContent>
+                    <Typography>Bạn có chắc chắn muốn xóa người dùng này không?</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseConfirmDeleteDialog} color="secondary"
+                    sx={{
+                        '&:hover': {
+                            backgroundColor: 'green', // Màu nền khi hover
+                            color: 'white' // Màu chữ khi hover
+                        }
+                    }}
+                    >
+                        
+                        Hủy
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            handleDeleteUser(userIdToDelete);
+                            handleCloseConfirmDeleteDialog();
+                        }}
+                        color="primary"
+                        sx={{
+                            '&:hover': {
+                                backgroundColor: 'green', // Màu nền khi hover
+                                color: 'white' // Màu chữ khi hover
+                            }
+                        }}
+                    >
+                        Xóa
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };

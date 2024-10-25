@@ -35,12 +35,20 @@ const HeaderAdmin = () => {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#f3c9c4' }}>
+    <AppBar
+      position="fixed"
+      sx={{
+        background: 'linear-gradient(to right, #f3c9c4, #FFB6C1)', // Gradient nền
+        padding: '4px 16px', // Giảm khoảng đệm để giảm chiều cao
+        zIndex: 1000, // Đảm bảo nó nằm trên các thành phần khác
+        height: '60px', // Cố định chiều cao nếu cần
+      }}
+    >
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
+        <Toolbar disableGutters sx={{ minHeight: '40px', padding: '0px' }}> {/* Giảm chiều cao của Toolbar */}
           {/* Logo */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
-            <img src={logoUrl} alt="Flower Shop Logo" style={{ height: 40, width: 40 }} />
+            <img src={logoUrl} alt="Flower Shop Logo" style={{ height: 30, width: 30 }} /> {/* Giảm kích thước logo nếu cần */}
           </Box>
 
           {/* Tên cửa hàng */}
@@ -48,17 +56,23 @@ const HeaderAdmin = () => {
             variant="h6"
             noWrap
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'inline-block' }, cursor: 'pointer' }}
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'flex', md: 'inline-block' },
+              cursor: 'pointer',
+              lineHeight: '1.5', // Giảm chiều cao dòng
+              fontSize: '1rem', // Giảm kích thước font nếu cần
+            }}
             onClick={() => navigate('/admin/dashboard')}
           >
-            Flower Shop Admin
+            Flower Paradise
           </Typography>
 
           {/* Nút Home */}
           <Button
             color="inherit"
             onClick={() => navigate('/admin/dashboard')}
-            sx={{ mx: 2 }}
+            sx={{ mx: 1, padding: '4px 8px' }} // Giảm padding của button
           >
             Home
           </Button>
@@ -67,7 +81,7 @@ const HeaderAdmin = () => {
           <Button
             color="inherit"
             onClick={() => navigate('/admin/manage-users')}
-            sx={{ mx: 2 }}
+            sx={{ mx: 1, padding: '4px 8px' }} // Giảm padding của button
           >
             Manage Users
           </Button>
@@ -76,7 +90,7 @@ const HeaderAdmin = () => {
           <Button
             color="inherit"
             onClick={() => navigate('/admin/manage-products')}
-            sx={{ mx: 2 }}
+            sx={{ mx: 1, padding: '4px 8px' }} // Giảm padding của button
           >
             Manage Products
           </Button>

@@ -91,7 +91,7 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}
           >
-            Flower Shop
+            Flower Paradise
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>

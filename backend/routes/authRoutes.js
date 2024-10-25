@@ -120,7 +120,7 @@ router.post('/login', async (req, res) => {
 
         // Tạo token
         const payload = { userId: user._id };
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
 
         // Trả về token và role của người dùng
         res.json({ token, role: user.role });
