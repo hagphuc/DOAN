@@ -199,7 +199,6 @@ router.delete('/:id', authAdmin, async (req, res) => {
         const product = await Product.findByIdAndDelete(req.params.id); // Sử dụng findByIdAndDelete
         
         if (!product) {
-            console.log('Sản phẩm không tìm thấy'); // Log nếu không tìm thấy sản phẩm
             return res.status(404).json({ msg: 'Sản phẩm không tìm thấy' });
         }
 
@@ -210,5 +209,4 @@ router.delete('/:id', authAdmin, async (req, res) => {
         res.status(500).json({ msg: 'Lỗi máy chủ', error: err.message }); // Trả về thông tin lỗi
     }
 });
-
 module.exports = router;

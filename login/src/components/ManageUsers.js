@@ -11,7 +11,6 @@ import {
     Button,
     TextField,
     Typography,
-    CircularProgress,
     Grid,
     Snackbar,
     Alert as MuiAlert,
@@ -119,7 +118,6 @@ const ManageUsers = () => {
         }
     };
 
-    // Hàm đóng Snackbar
     const handleCloseSnackbar = () => {
         setSnackbarOpen(false);
         setError('');
@@ -131,7 +129,6 @@ const ManageUsers = () => {
             <HeaderAdmin />
             <Typography variant="h4" gutterBottom className="title">Quản Lý Người Dùng</Typography>
 
-            {/* Snackbar cho thông báo thành công hoặc lỗi */}
             <Snackbar 
                 open={snackbarOpen} 
                 autoHideDuration={5000} 
@@ -183,45 +180,6 @@ const ManageUsers = () => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <Button variant="contained" color="primary" onClick={handleAddUser} disabled={loading}>
-                        {loading ? <CircularProgress size={24} /> : 'Thêm Người Dùng'}
-                    </Button>
-                </Grid>
-            </Grid>
-
-            {/* Form chỉnh sửa người dùng */}
-            {editUserId && (
-                <div className="form-section">
-                    <Typography variant="h6">Chỉnh Sửa Người Dùng</Typography>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={3}>
-                            <TextField
-                                label="Tên người dùng"
-                                variant="outlined"
-                                value={editUser.username}
-                                onChange={(e) => setEditUser({ ...editUser, username: e.target.value })}
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={3}>
-                            <TextField
-                                label="Email"
-                                variant="outlined"
-                                value={editUser.email}
-                                onChange={(e) => setEditUser({ ...editUser, email: e.target.value })}
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={3}>
-                            <TextField
-                                label="Vai trò"
-                                variant="outlined"
-                                value={editUser.role}
-                                onChange={(e) => setEditUser({ ...editUser, role: e.target.value })}
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={3}>
                             <TextField
                                 label="Mật khẩu (để trống nếu không thay đổi)"
                                 variant="outlined"
@@ -230,11 +188,6 @@ const ManageUsers = () => {
                                 onChange={(e) => setEditUser({ ...editUser, password: e.target.value })}
                                 fullWidth
                             />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Button variant="contained" color="primary" onClick={handleUpdateUser} disabled={loading}>
-                                {loading ? <CircularProgress size={24} /> : 'Cập Nhật Người Dùng'}
-                            </Button>
                         </Grid>
                     </Grid>
                 </div>
