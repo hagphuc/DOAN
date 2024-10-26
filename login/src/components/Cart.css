@@ -1,0 +1,100 @@
+/* Đặt nền cho toàn bộ giỏ hàng */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4; /* Nền sáng để tạo cảm giác sạch sẽ */
+    margin: 0;
+    padding: 0;
+}
+
+/* Định dạng tiêu đề */
+h1 {
+    text-align: center;
+    color: #333;
+    margin: 20px 0;
+    font-size: 2em; /* Kích thước chữ lớn hơn */
+}
+
+/* Định dạng danh sách giỏ hàng */
+ul {
+    list-style-type: none; /* Loại bỏ dấu đầu dòng */
+    padding: 0;
+    max-width: 900px; /* Đặt chiều rộng tối đa */
+    margin: 0 auto; /* Căn giữa giỏ hàng */
+}
+
+/* Định dạng cho mỗi sản phẩm trong giỏ hàng */
+.cart-item {
+    background: #fff; /* Màu nền trắng */
+    border: 1px solid #ddd; /* Đường viền mờ */
+    border-radius: 8px; /* Bo tròn góc */
+    margin: 10px 0; /* Khoảng cách giữa các sản phẩm */
+    padding: 15px; /* Padding cho sản phẩm */
+    display: flex; /* Sử dụng flexbox để căn chỉnh nội dung */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng cho sản phẩm */
+}
+
+/* Định dạng cho hình ảnh sản phẩm */
+.cart-item-image {
+    width: 80px; /* Chiều rộng cố định cho hình ảnh */
+    height: auto; /* Chiều cao tự động */
+    margin-right: 15px; /* Khoảng cách giữa hình ảnh và nội dung */
+    border-radius: 5px; /* Bo tròn hình ảnh */
+}
+
+/* Định dạng cho thông tin sản phẩm */
+.cart-item span {
+    flex-grow: 1; /* Cho phép span chiếm không gian còn lại */
+    font-size: 16px; /* Kích thước chữ cho tên sản phẩm */
+    color: #555; /* Màu chữ tối hơn để dễ đọc */
+}
+
+/* Định dạng cho các nút điều khiển số lượng */
+.quantity-control {
+    display: flex; /* Sử dụng flexbox để căn chỉnh */
+    align-items: center; /* Căn giữa theo chiều dọc */
+}
+
+/* Định dạng cho các nút điều khiển */
+.quantity-control button {
+    background-color: #007BFF; /* Màu nền xanh dương */
+    color: white; /* Màu chữ trắng */
+    border: none; /* Không có đường viền */
+    border-radius: 5px; /* Bo tròn góc */
+    padding: 5px 10px; /* Padding cho nút */
+    cursor: pointer; /* Hiển thị con trỏ tay khi hover */
+    margin: 0 5px; /* Khoảng cách giữa các nút */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển đổi màu nền */
+    font-size: 14px; /* Kích thước chữ cho nút */
+}
+
+.quantity-control button:hover {
+    background-color: #0056b3; /* Tối màu khi hover */
+}
+
+/* Định dạng cho nút xóa */
+.cart-item button.remove {
+    background-color: #dc3545; /* Màu đỏ cho nút xóa */
+    margin-left: 10px; /* Khoảng cách với nút điều khiển số lượng */
+    padding: 5px 10px; /* Padding cho nút */
+    border-radius: 5px; /* Bo tròn góc */
+    color: white; /* Màu chữ trắng */
+}
+
+/* Định dạng cho tổng cộng */
+h2 {
+    text-align: right; /* Căn phải cho tổng cộng */
+    color: #333; /* Màu chữ tối */
+    margin-top: 20px; /* Khoảng cách phía trên */
+    font-size: 1.5em; /* Kích thước chữ lớn hơn cho tổng cộng */
+}
+
+/* Định dạng cho khung tổng cộng */
+.total-container {
+    background: #f9f9f9; /* Màu nền nhẹ cho khung tổng cộng */
+    padding: 15px; /* Padding cho khung tổng cộng */
+    border: 1px solid #ddd; /* Đường viền mờ */
+    border-radius: 8px; /* Bo tròn góc */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng cho khung tổng cộng */
+    margin-top: 20px; /* Khoảng cách với phần trên */
+}

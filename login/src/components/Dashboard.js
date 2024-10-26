@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ProductList from './ProductList'; // Import component danh sách sản phẩm
 import './Dashboard.css'; // Nếu bạn có file CSS riêng cho dashboard
 import Cookies from 'js-cookie'; // Import thư viện để quản lý cookie
+import Header from './Header'; // Import component Header
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -20,7 +21,7 @@ const Dashboard = () => {
             <Header />
             {/* Nội dung chính của Dashboard */}
             <div className="dashboard-content">
-                <h1>Dashboard</h1>
+                <h1>Danh sách sản phẩm</h1>
                 {/* Hiển thị danh sách sản phẩm */}
                 <ProductList />
             </div>

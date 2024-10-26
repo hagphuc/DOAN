@@ -1,0 +1,234 @@
+/* Container for main content */
+.detail-container {
+    display: flex;
+    flex-wrap: wrap; /* Cho phép gói lại trên các màn hình nhỏ */
+    align-items: flex-start;
+    justify-content: center; /* Giữ mô tả và hình ảnh ở giữa */
+    margin-top: 20px;
+    padding: 0 10px;
+}
+
+.product-image {
+    width: 100%;
+    max-width: 450px; /* Đảm bảo hình ảnh lớn hơn */
+    height: 400px; /* Đặt chiều cao cố định để đảm bảo đồng nhất */
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s, filter 0.3s;
+    filter: brightness(1.1); /* Làm sáng ảnh một chút */
+    object-fit: cover; /* Cắt hình ảnh để giữ tỷ lệ */
+}
+
+.product-image:hover {
+    transform: scale(1.1); /* Phóng to hình ảnh khi hover */
+    filter: brightness(1.3); /* Tăng độ sáng khi hover */
+}
+
+/* Phong chữ cho tiêu đề sản phẩm */
+h1 {
+    font-size: 2.5em; /* Kích thước lớn hơn cho tiêu đề */
+    margin-bottom: 10px; /* Khoảng cách dưới tiêu đề */
+    color: #333; /* Màu chữ tối */
+    font-weight: bold; /* Đậm hơn để nổi bật */
+}
+
+/* Styling for price */
+.price {
+    font-size: 1.5em;
+    color: #e67e22;
+}
+
+/* Styling for quantity selector */
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.quantity-selector label {
+    margin-right: 10px;
+}
+
+.quantity-selector input {
+    width: 80px;
+    padding: 5px;
+    margin-left: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    text-align: center; /* Căn giữa văn bản trong ô nhập */
+}
+
+/* Cải thiện kiểu dáng cho nút "Thêm vào giỏ hàng" */
+.add-to-cart {
+    background-color: #27ae60; /* Màu nền cho nút */
+    color: white; /* Màu chữ trắng */
+    padding: 10px 20px; /* Padding cho nút */
+    border-radius: 5px; /* Bo góc cho nút */
+    font-size: 1.2em; /* Kích thước chữ cho nút */
+    cursor: pointer; /* Đổi con trỏ khi rê chuột */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển tiếp cho màu nền */
+    margin-top: 10px; /* Khoảng cách trên nút */
+    width: 100%; /* Chiếm toàn bộ chiều rộng */
+}
+
+.add-to-cart:hover {
+    background-color: #2ecc71;
+}
+
+/* Error message styling */
+.error-message {
+    color: red;
+    text-align: center;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+
+.image-container img {
+    width: 400px; /* Chiều rộng cố định */
+    height: 400px; /* Chiều cao cố định */
+    object-fit: cover; /* Đảm bảo hình ảnh không bị biến dạng */
+    margin-right: 200px;
+}
+
+/* Đảm bảo hình ảnh trong modal có cùng kích thước với hình ảnh sản phẩm chính */
+.modal-image {
+    width: 450px; /* Hoặc giá trị chiều rộng mong muốn */
+    height: 450px; /* Hoặc giá trị chiều cao mong muốn */
+    object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+    border-radius: 8px; /* Bo góc cho hình ảnh */
+}
+
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+/* Thêm hiệu ứng phóng to cho hình ảnh khi mở modal */
+.modal-image:hover {
+    transform: scale(1.1); /* Phóng to hình ảnh khi hover */
+}
+
+.quantity-selector {
+    display: flex; /* Hiển thị theo hàng ngang */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    margin: 15px 0; /* Khoảng cách trên và dưới */
+}
+
+.quantity-button {
+    border: none; /* Không viền */
+    background-color: #27ae60; /* Màu nền cho nút */
+    color: white; /* Màu chữ trắng */
+    padding: 5px 10px; /* Padding cho nút */
+    border-radius: 4px; /* Bo góc cho nút */
+    cursor: pointer; /* Đổi con trỏ khi rê chuột */
+    font-size: 1.2em; /* Kích thước chữ cho nút */
+    margin: 0 5px; /* Khoảng cách giữa các nút */
+}
+
+.quantity-button:hover {
+    background-color: #2ecc71; /* Màu nền khi hover */
+}
+
+.modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    display: flex; /* Thêm flexbox cho bố cục */
+    justify-content: center; /* Căn giữa nội dung */
+    top: -37px; /* Điều chỉnh giá trị này để di chuyển lên trên */
+}
+
+
+.modal-navigation-icons {
+    position: absolute; /* Đặt vị trí tuyệt đối */
+    top: 50%; /* Căn giữa theo chiều dọc */
+    transform: translateY(-50%); /* Điều chỉnh vị trí về giữa */
+    width: 100%; /* Chiếm toàn bộ chiều rộng */
+    display: flex; /* Sử dụng Flexbox để dễ dàng căn giữa */
+    justify-content: space-between; /* Căn đều các nút ra hai bên */
+    padding: 0 20px; /* Thêm padding bên trái và phải */
+    z-index: 10; /* Đảm bảo nút nằm trên hình ảnh */
+}
+
+/* Đặt vị trí cho các nút điều hướng cụ thể */
+.nav-icon-left {
+    position: absolute; /* Vị trí tuyệt đối */
+    left: -90px; /* Cách bên trái 10px */
+}
+.nav-icon-right {
+    position: absolute; /* Vị trí tuyệt đối */
+    right: -90px; /* Cách bên phải 10px */
+}
+.modal-navigation-icons button {
+    background-color: rgba(255, 255, 255, 0.8); /* Màu nền nhẹ cho nút */
+    border: none; /* Bỏ viền */
+    border-radius: 5px; /* Bo góc cho nút */
+    padding: 10px; /* Thêm padding cho nút */
+    cursor: pointer; /* Hiển thị con trỏ khi hover */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển tiếp cho màu nền */
+}
+.modal-navigation-icons button:hover {
+    background-color: rgba(255, 255, 255, 1); /* Đổi màu khi hover */
+}
+.nav-icon {
+    background: none;
+    border: none;
+    font-size: 24px; /* Kích thước biểu tượng */
+    cursor: pointer;
+    color: #007bff; /* Màu sắc biểu tượng */
+    transition: color 0.3s;
+}
+
+.nav-icon:hover {
+    color: #0056b3; /* Màu sắc khi hover */
+}
+
+.nav-icon:disabled {
+    color: #ccc; /* Màu sắc khi không có sản phẩm */
+    cursor: not-allowed; /* Đổi con trỏ khi không thể nhấn */
+}
+
+/* Bố cục tổng thể cho chi tiết sản phẩm */
+.product-detail {
+    background-color: #f9f9f9; /* Màu nền nhẹ để làm nổi bật phần mô tả */
+}
+
+
+/* Container cho thông tin sản phẩm */
+.info-container {
+    max-width: 500px; /* Giới hạn chiều rộng của phần thông tin sản phẩm */
+    padding: 20px; /* Thêm padding xung quanh */
+    background-color: #fff; /* Màu nền trắng cho phần mô tả */
+    border-radius: 8px; /* Bo góc cho phần thông tin */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng để tạo chiều sâu */
+    margin: 20px; /* Khoảng cách giữa các phần */
+}
+
+/* Cải thiện phong cách cho mô tả sản phẩm */
+.info-container p {
+    font-size: 1.1em; /* Kích thước chữ vừa phải */
+    line-height: 1.5; /* Khoảng cách giữa các dòng */
+    margin: 10px 0; /* Khoảng cách giữa các đoạn văn */
+    color: #555; /* Màu chữ nhẹ hơn */
+}
+/* Styling cho giá sản phẩm */
+.price {
+    font-size: 1.5em; /* Kích thước lớn cho giá */
+    color: #e67e22; /* Màu sắc nổi bật cho giá */
+    font-weight: bold; /* Đậm hơn để thu hút sự chú ý */
+}

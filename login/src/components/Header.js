@@ -14,11 +14,13 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Badge from '@mui/material/Badge';
+import { useCart } from '../components/CartContext'; // Import CartContext
 
 const logoUrl = `${process.env.PUBLIC_URL}/logo2.jpg`;
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard','Giỏ hàng', 'Logout'];
+const pages = ['Home', 'Products', 'Pricing', 'Blog'];
+const settings = ['Profile', 'Account', 'Dashboard', 'Giỏ hàng', 'Logout'];
 
 function ResponsiveAppBar() {
   const navigate = useNavigate();
@@ -26,12 +28,20 @@ function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [searchTerm, setSearchTerm] = React.useState('');
 
+  // Sử dụng CartContext để lấy số lượng giỏ hàng
+  const { cartItems } = useCart();
+  const cartQuantity = cartItems.reduce((total, item) => total + item.quantity, 0); // Tính tổng số lượng giỏ hàng
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
+  };
+
+  const handleOpenCartMenu = () => {
+    navigate('/cart'); // Điều hướng đến trang giỏ hàng khi nhấp vào biểu tượng giỏ hàng
   };
 
   const handleCloseNavMenu = () => {
@@ -46,14 +56,33 @@ function ResponsiveAppBar() {
     setSearchTerm(event.target.value);
   };
 
+  const handleSearchSubmit = (event) => {
+    if (event.key === 'Enter') {
+      navigate(`/search?query=${searchTerm}`); // Điều hướng đến trang tìm kiếm
+    }
+  };
+
   const handleLogout = () => {
-    // Xóa dữ liệu người dùng khỏi localStorage hoặc sessionStorage
-    localStorage.removeItem('user'); // Xóa thông tin người dùng
-    localStorage.removeItem('token'); // Xóa token nếu có
+    localStorage.removeItem('user'); 
+    localStorage.removeItem('token'); 
+    navigate('/login'); 
+  };
 
-    // Nếu bạn sử dụng Redux hoặc Context API, hãy reset trạng thái người dùng ở đây
-
-    navigate('/login'); // Điều hướng đến trang đăng nhập
+  const handlePageChange = (page) => {
+    switch(page) {
+      case 'Home':
+        navigate('/dashboard');
+        break;
+      case 'Pricing':
+        navigate('/pricing');
+        break;
+      case 'Blog':
+        navigate('/blog');
+        break;
+      default:
+        break;
+    }
+    handleCloseNavMenu(); 
   };
 
   return (
@@ -113,7 +142,7 @@ function ResponsiveAppBar() {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={() => { handlePageChange(page); handleCloseNavMenu(); }}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -124,11 +153,30 @@ function ResponsiveAppBar() {
             <img src={logoUrl} alt="Flower Shop Logo" style={{ height: 40, width: 40 }} />
           </Box>
 
+          <Typography
+            variant="h5"
+            noWrap
+            component="a"
+            href="#app-bar-with-responsive-menu"
+            sx={{
+              mr: 2,
+              display: { xs: 'flex', md: 'none' },
+              flexGrow: 1,
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'white',
+              textDecoration: 'none',
+            }}
+          >
+            Flower Shop
+          </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => { handlePageChange(page); handleCloseNavMenu(); }}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
@@ -142,6 +190,7 @@ function ResponsiveAppBar() {
             placeholder="Search..."
             value={searchTerm}
             onChange={handleSearchChange}
+            onKeyDown={handleSearchSubmit}
             sx={{ bgcolor: 'white', borderRadius: 1, mx: 2 }}
           />
 
@@ -151,13 +200,15 @@ function ResponsiveAppBar() {
             onClick={handleOpenCartMenu}
             color="inherit"
           >
-            <ShoppingCartIcon />
+            <Badge badgeContent={cartQuantity} color="error">
+              <ShoppingCartIcon />
+            </Badge>
           </IconButton>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="User Avatar" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -185,7 +236,7 @@ function ResponsiveAppBar() {
           </Box>
         </Toolbar>
       </Container>
-    </AppBar>
+    </AppBar> 
   );
 }
 

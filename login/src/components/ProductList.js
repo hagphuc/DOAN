@@ -1,11 +1,15 @@
+// components/ProductList.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { useCart } from './CartContext'; // Import CartContext
 import './ProductList.css';
 
 const ProductList = () => {
     const [products, setProducts] = useState([]);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
+    const { addToCart } = useCart(); // Lấy addToCart từ CartContext
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -40,12 +44,17 @@ const ProductList = () => {
                 {products.map(product => (
                     <div className="product-item" key={product._id}>
                         {product.imageUrl ? (
-                            <img src={`http://localhost:5000/${product.imageUrl}`} alt={product.name} />
+                            <Link to={`/products/${product._id}`}>
+                                <img 
+                                    src={`http://localhost:5000/${product.imageUrl}`} 
+                                    alt={product.name} 
+                                />
+                            </Link>
                         ) : (
                             <p>Không có hình ảnh</p>
                         )}
                         <h3>{product.name}</h3>
-                        <p className="price">Giá: {product.price} VNĐ</p> {/* Thêm lớp cho giá */}
+                        <p className="price">Giá: {product.price} VNĐ</p>
                         <button onClick={() => addToCart(product)}>Thêm vào giỏ hàng</button>
                     </div>
                 ))}
