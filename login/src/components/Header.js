@@ -24,7 +24,6 @@ function ResponsiveAppBar() {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [anchorElCart, setAnchorElCart] = React.useState(null);
   const [searchTerm, setSearchTerm] = React.useState('');
 
   const handleOpenNavMenu = (event) => {
@@ -35,20 +34,12 @@ function ResponsiveAppBar() {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleOpenCartMenu = (event) => {
-    setAnchorElCart(event.currentTarget);
-  };
-
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
-  };
-
-  const handleCloseCartMenu = () => {
-    setAnchorElCart(null);
   };
 
   const handleSearchChange = (event) => {
@@ -133,25 +124,6 @@ function ResponsiveAppBar() {
             <img src={logoUrl} alt="Flower Shop Logo" style={{ height: 40, width: 40 }} />
           </Box>
 
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'white',
-              textDecoration: 'none',
-            }}
-          >
-            Flower Shop
-          </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
@@ -181,35 +153,6 @@ function ResponsiveAppBar() {
           >
             <ShoppingCartIcon />
           </IconButton>
-
-          <Menu
-            id="menu-cart"
-            anchorEl={anchorElCart}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={Boolean(anchorElCart)}
-            onClose={handleCloseCartMenu}
-          >
-            <MenuItem onClick={handleCloseCartMenu}>
-              <Typography textAlign="center">Your Cart</Typography>
-            </MenuItem>
-            <MenuItem onClick={handleCloseCartMenu}>
-              <Typography textAlign="center">Item 1</Typography>
-            </MenuItem>
-            <MenuItem onClick={handleCloseCartMenu}>
-              <Typography textAlign="center">Item 2</Typography>
-            </MenuItem>
-            <MenuItem onClick={handleCloseCartMenu}>
-              <Typography textAlign="center">Checkout</Typography>
-            </MenuItem>
-          </Menu>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">

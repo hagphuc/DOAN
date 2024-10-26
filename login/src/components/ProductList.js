@@ -6,7 +6,6 @@ const ProductList = () => {
     const [products, setProducts] = useState([]);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
-    const [cart, setCart] = useState([]);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -31,14 +30,8 @@ const ProductList = () => {
         fetchProducts();
     }, []);
 
-    const addToCart = (product) => {
-        setCart(prevCart => [...prevCart, product]);
-        alert(`${product.name} đã được thêm vào giỏ hàng!`);
-    };
-
     return (
         <div>
-            <h2>Danh sách sản phẩm</h2>
             {loading && <p>Đang tải sản phẩm...</p>}
             {error && <p className="error-message">{error}</p>}
             {products.length === 0 && !loading && <p>Không có sản phẩm nào.</p>}
@@ -56,22 +49,6 @@ const ProductList = () => {
                         <button onClick={() => addToCart(product)}>Thêm vào giỏ hàng</button>
                     </div>
                 ))}
-            </div>
-    
-            {/* Hiển thị giỏ hàng */}
-            <div className="cart">
-                <h2>Giỏ hàng</h2>
-                {cart.length === 0 ? (
-                    <p>Giỏ hàng trống.</p>
-                ) : (
-                    <ul>
-                        {cart.map((item, index) => (
-                            <li key={index}>
-                                {item.name} - Giá: {item.price} VNĐ
-                            </li>
-                        ))}
-                    </ul>
-                )}
             </div>
         </div>
     );
