@@ -1,4 +1,3 @@
-// components/Cart.js
 import React from 'react';
 import { useCart } from './CartContext';
 import Header from './Header';
@@ -12,10 +11,6 @@ const Cart = () => {
             return acc + (item.price * item.quantity || 0);
         }, 0);
     };
-
-    if (cartItems.length === 0) {
-        return <div>Giỏ hàng của bạn đang trống.</div>;
-    }
 
     return (
         <div>

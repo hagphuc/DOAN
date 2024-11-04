@@ -203,7 +203,6 @@ const ManageUsers = () => {
                     <TableBody>
                         {users.map((user) => (
                             <TableRow key={user._id}>
-                                <TableCell>{user._id}</TableCell>
                                 <TableCell>{user.username}</TableCell>
                                 <TableCell>{user.email}</TableCell>
                                 <TableCell>{user.role}</TableCell>
@@ -232,7 +231,6 @@ const ManageUsers = () => {
                 </Table>
             </TableContainer>
 
-            {/* Dialog thêm/sửa người dùng */}
             <Dialog 
                 open={dialogOpen} 
                 onClose={handleCloseDialog} 
@@ -314,7 +312,6 @@ const ManageUsers = () => {
                 </DialogActions>
             </Dialog>
 
-            {/* Dialog xác nhận xóa người dùng */}
             <Dialog
                 open={confirmDeleteDialogOpen}
                 onClose={handleCloseConfirmDeleteDialog}

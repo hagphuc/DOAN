@@ -90,13 +90,11 @@ const ManageProducts = () => {
         setOpenDialog(true);
     };
 
-    // Mở dialog xác nhận xóa
     const handleConfirmDeleteProduct = (id) => {
         setProductIdToDelete(id); // Lưu id sản phẩm để xóa
         setOpenConfirmDialog(true); // Mở dialog xác nhận
     };
 
-    // Xóa sản phẩm
     const handleDeleteProduct = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -210,7 +208,6 @@ const ManageProducts = () => {
                 </Table>
             </TableContainer>
 
-            {/* Dialog để thêm/sửa sản phẩm */}
             <Dialog open={openDialog} onClose={handleCloseDialog}>
                 <DialogTitle>{editingProduct ? 'Sửa Sản Phẩm' : 'Thêm Sản Phẩm'}</DialogTitle>
                 <DialogContent>
@@ -280,7 +277,6 @@ const ManageProducts = () => {
                 </DialogActions>
             </Dialog>
 
-            {/* Dialog xác nhận xóa sản phẩm */}
             <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>
                 <DialogTitle>Xác Nhận</DialogTitle>
                 <DialogContent>
@@ -314,7 +310,6 @@ const ManageProducts = () => {
                 </DialogActions>
             </Dialog>
 
-            {/* Snackbar thông báo */}
             <Snackbar
                 open={notification.open}
                 autoHideDuration={4000}
@@ -329,4 +324,3 @@ const ManageProducts = () => {
     );
 };
 
-export default ManageProducts;

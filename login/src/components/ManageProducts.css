@@ -98,13 +98,6 @@
     border-radius: 6px;
 }
 
-.product-image {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 8px;
-}
-
 .product-item-actions {
     display: flex;
     gap: 10px;

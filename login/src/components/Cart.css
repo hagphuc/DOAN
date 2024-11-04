@@ -1,11 +1,3 @@
-/* Đặt nền cho toàn bộ giỏ hàng */
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4; /* Nền sáng để tạo cảm giác sạch sẽ */
-    margin: 0;
-    padding: 0;
-}
-
 /* Định dạng tiêu đề */
 h1 {
     text-align: center;
@@ -24,8 +16,6 @@ ul {
 
 /* Định dạng cho mỗi sản phẩm trong giỏ hàng */
 .cart-item {
-    background: #fff; /* Màu nền trắng */
-    border: 1px solid #ddd; /* Đường viền mờ */
     border-radius: 8px; /* Bo tròn góc */
     margin: 10px 0; /* Khoảng cách giữa các sản phẩm */
     padding: 15px; /* Padding cho sản phẩm */
