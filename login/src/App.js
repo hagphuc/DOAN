@@ -38,10 +38,10 @@ function App() {
           {/* Nội dung chính */}
           <div className="main-content">
             <Routes>
-              {/* Đường dẫn mặc định, điều hướng dựa trên trạng thái đăng nhập */}
+              {/* Đường dẫn mặc định, luôn điều hướng đến trang login */}
               <Route
                 path="/"
-                element={isAuthenticated() ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />}
+                element={<Navigate to="/login" replace />}
               />
               {/* Các routes khác */}
               <Route path="/register" element={<Register />} />

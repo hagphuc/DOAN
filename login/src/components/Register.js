@@ -65,7 +65,7 @@ const Register = () => {
 
     return (
         <div className="register-container">
-            <h2>Đăng Ký</h2>
+            <h1>Đăng Ký</h1>
             <form onSubmit={handleRegister} className="register-form">
                 <div className="form-group">
                     <label>Tên người dùng:</label>

@@ -1,8 +1,15 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4; /* Nền sáng để tạo cảm giác sạch sẽ */
+    margin: 0;
+    padding: 20px;
+}
+
 /* Định dạng tiêu đề */
 h1 {
     text-align: center;
     color: #333;
-    margin: 20px 0;
+    margin-bottom: 20px;
     font-size: 2em; /* Kích thước chữ lớn hơn */
 }
 
@@ -16,21 +23,26 @@ ul {
 
 /* Định dạng cho mỗi sản phẩm trong giỏ hàng */
 .cart-item {
-    border-radius: 8px; /* Bo tròn góc */
-    margin: 10px 0; /* Khoảng cách giữa các sản phẩm */
     padding: 15px; /* Padding cho sản phẩm */
-    display: flex; /* Sử dụng flexbox để căn chỉnh nội dung */
-    align-items: center; /* Căn giữa theo chiều dọc */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng cho sản phẩm */
+    display: flex; /* Sử dụng flexbox cho sản phẩm */
+    align-items: center; /* Căn giữa dọc */
+    justify-content: space-between; /* Phân chia không gian giữa các phần tử */
+    margin: 10px 0; /* Khoảng cách giữa các sản phẩm */
+    transition: transform 0.3s; /* Hiệu ứng chuyển đổi khi hover */
+}
+
+.cart-item:hover {
+    transform: translateY(-3px); /* Hiệu ứng nhấc lên khi hover */
 }
 
 /* Định dạng cho hình ảnh sản phẩm */
 .cart-item-image {
-    width: 80px; /* Chiều rộng cố định cho hình ảnh */
-    height: auto; /* Chiều cao tự động */
-    margin-right: 15px; /* Khoảng cách giữa hình ảnh và nội dung */
-    border-radius: 5px; /* Bo tròn hình ảnh */
+    width: 100px; /* Kích thước chiều rộng cố định */
+    height: 100px; /* Kích thước chiều cao cố định */
+    object-fit: cover; /* Đảm bảo hình ảnh giữ tỷ lệ mà không bị biến dạng */
+    margin-right: 15px; /* Khoảng cách giữa ảnh và tên sản phẩm */
 }
+
 
 /* Định dạng cho thông tin sản phẩm */
 .cart-item span {
@@ -88,3 +100,428 @@ h2 {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng cho khung tổng cộng */
     margin-top: 20px; /* Khoảng cách với phần trên */
 }
+
+/* Cart.css */
+
+.delete-animation {
+    opacity: 0; /* Fade out */
+    transform: translateY(20px); /* Move down */
+}
+
+
+.trash-icon {
+    font-size: 24px;
+    transition: transform 0.5s ease; /* Smooth transition for icon change */
+}
+
+/* Add animation for icon change */
+.trash-icon.opening {
+    animation: shake 0.5s forwards; /* Optionally add shaking effect */
+}
+
+@keyframes shake {
+    0% { transform: rotate(0); }
+    50% { transform: rotate(-5deg); }
+    100% { transform: rotate(0); }
+}
+
+/* Ensure text fades out too */
+.delete-text {
+    margin-left: 10px;
+    transition: opacity 1s ease; /* Increased duration for fading out the text */
+}
+
+.fade-out {
+    opacity: 0; /* Fade out text */
+}
+
+.order-modal h2 {
+    text-align: center; /* Căn giữa tiêu đề */
+    color: #333;
+    margin-bottom: 15px; /* Khoảng cách dưới tiêu đề */
+}
+
+.order-modal label {
+    display: block; /* Hiển thị label như khối */
+    margin: 10px 0 5px; /* Khoảng cách cho label */
+    font-weight: bold; /* Làm cho label nổi bật */
+    color: #555; /* Màu chữ cho label */
+}
+
+.order-modal input {
+    width: 100%; /* Chiều rộng 100% để đầy đủ không gian */
+    padding: 10px; /* Padding cho input */
+    border: 1px solid #ddd; /* Đường viền nhẹ */
+    border-radius: 4px; /* Bo tròn góc */
+    box-sizing: border-box; /* Bao gồm padding và border trong kích thước */
+    font-size: 14px; /* Kích thước chữ cho input */
+    margin-bottom: 15px; /* Khoảng cách dưới mỗi input */
+}
+
+.order-modal button {
+    width: 100%; /* Chiều rộng 100% cho nút */
+    padding: 10px; /* Padding cho nút */
+    background-color: #007BFF; /* Màu nền xanh dương */
+    color: white; /* Màu chữ trắng */
+    border: none; /* Không có đường viền */
+    border-radius: 5px; /* Bo tròn góc */
+    cursor: pointer; /* Hiển thị con trỏ tay khi hover */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển đổi màu nền */
+    margin-top: 10px; /* Khoảng cách phía trên nút */
+}
+
+.order-modal button:hover {
+    background-color: #0056b3; /* Tối màu khi hover */
+}
+
+/* Định dạng cho thông tin sản phẩm trong modal */
+.order-product {
+    display: flex; /* Sử dụng flexbox để căn chỉnh */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    margin-bottom: 10px; /* Khoảng cách dưới mỗi sản phẩm */
+}
+
+.order-product-image {
+    width: 40px; /* Kích thước hình ảnh nhỏ hơn một chút */
+    height: auto; /* Chiều cao tự động */
+    margin-right: 10px; /* Khoảng cách giữa hình ảnh và tên sản phẩm */
+    border-radius: 3px; /* Bo tròn hình ảnh */
+}
+
+.order-status {
+    text-align: center; /* Căn giữa thông báo đặt hàng */
+    margin-top: 15px; /* Khoảng cách phía trên */
+    font-weight: bold; /* Làm nổi bật thông báo */
+}
+
+.order-status.success {
+    color: green; /* Màu xanh cho thông báo thành công */
+}
+
+.order-status.error {
+    color: red; /* Màu đỏ cho thông báo lỗi */
+}
+
+.order-modal {
+    display: flex; /* Sử dụng flexbox để bố trí */
+    flex-direction: column; /* Sắp xếp các phần tử theo chiều dọc */
+    justify-content: space-between; /* Tạo khoảng cách giữa các phần tử */
+    padding: 20px; /* Padding cho modal */
+    background-color: white; /* Nền trắng cho modal */
+    border-radius: 8px; /* Bo tròn góc */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng cho modal */
+    max-width: 800px; /* Đặt chiều rộng tối đa cho modal */
+    width: 100%; /* Đặt chiều rộng của modal bằng 100% của phần tử cha */
+}
+
+.order-modal-content {
+    display: flex; /* Sử dụng flexbox cho phần nội dung */
+    justify-content: space-between; /* Căn giữa và tạo khoảng cách giữa hai cột */
+    gap: 20px; /* Khoảng cách giữa hai cột */
+}
+
+.order-modal-buttons {
+    margin-top: auto; /* Đẩy các nút xuống dưới cùng */
+    display: flex; /* Sử dụng flexbox cho bố trí nút */
+    justify-content: flex-end; /* Căn các nút sang bên phải */
+    gap: 10px; /* Khoảng cách giữa các nút */
+}
+
+
+.order-info, .order-products {
+    flex: 1; /* Mỗi phần chiếm không gian bằng nhau */
+}
+
+.order-info {
+    padding: 20px; /* Padding cho phần thông tin người dùng */
+    background-color: #f9f9f9; /* Nền màu nhẹ cho phần thông tin người dùng */
+    border-radius: 8px; /* Bo tròn góc */
+}
+
+.order-products {
+    padding: 20px; /* Padding cho phần thông tin sản phẩm */
+    background-color: #fff; /* Nền trắng cho phần sản phẩm */
+    border-radius: 8px; /* Bo tròn góc */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Đổ bóng cho phần sản phẩm */
+}
+
+.order-product {
+    display: flex; /* Sử dụng flexbox để căn chỉnh */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    margin-bottom: 10px; /* Khoảng cách dưới mỗi sản phẩm */
+}
+
+.order-product-image {
+    width: 40px; /* Kích thước hình ảnh nhỏ */
+    height: auto; /* Chiều cao tự động */
+    margin-right: 10px; /* Khoảng cách giữa hình ảnh và tên sản phẩm */
+    border-radius: 3px; /* Bo tròn hình ảnh */
+}
+
+.order-modal-buttons {
+    display: flex; /* Sử dụng flexbox để căn giữa */
+    justify-content: center; /* Căn giữa các nút */
+    margin-top: 20px; /* Khoảng cách trên các nút */
+}
+
+.order-modal-buttons button {
+    padding: 8px 16px; /* Giảm padding để làm cho nút ngắn hơn */
+    border: none; /* Xóa đường viền nếu cần */
+    border-radius: 5px; /* Bo tròn góc */
+    background-color: #007BFF; /* Màu nền xanh dương */
+    color: white; /* Màu chữ trắng */
+    cursor: pointer; /* Con trỏ tay khi hover */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển đổi màu nền */
+    font-size: 14px; /* Kích thước chữ cho nút */
+    width: 100px; /* Chiều rộng cụ thể cho nút */
+}
+
+.order-modal-buttons button:hover {
+    background-color: #0056b3; /* Màu tối hơn khi hover */
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Màu mờ tối hơn */
+    z-index: 999;
+    transition: opacity 0.5s ease; /* Thêm hiệu ứng mờ */
+}
+
+.order-details {
+    display: flex; /* Sử dụng flexbox để bố trí thông tin */
+    justify-content: space-between; /* Căn giữa hai bên */
+}
+
+.customer-info {
+    flex: 1; /* Chiếm 50% chiều rộng */
+    margin-right: 20px; /* Khoảng cách bên phải */
+}
+
+.cart-summary {
+    flex: 1; /* Chiếm 50% chiều rộng */
+    max-height: 400px; /* Chiều cao tối đa */
+    overflow-y: auto; /* Cho phép cuộn theo chiều dọc */
+    border: 1px solid #ddd; /* Đường viền để tách biệt */
+    border-radius: 8px; /* Bo tròn góc */
+    padding: 10px; /* Padding cho danh sách */
+    top: 20px; /* Di chuyển xuống */
+    position: relative; /* Hoặc absolute nếu cần điều chỉnh chi tiết */
+    height: 320px;
+
+
+}
+
+.cart-summary h3 {
+    margin-top: 0; /* Bỏ margin trên h3 */
+}
+
+.order-status-popup {
+    position: fixed;
+    top: 20px; /* Changed from bottom to top */
+    right: 20px; /* Right corner */
+    background-color: #4caf50; /* Green for success */
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    opacity: 0.9;
+    z-index: 1000;
+    transition: opacity 0.5s ease;
+}
+
+.order-status-popup.error {
+    background-color: #f44336; /* Red for errors */
+}
+
+
+.cart-item-content {
+    display: flex; /* Sử dụng flexbox cho nội dung của mỗi mục */
+    align-items: center; /* Căn giữa dọc */
+    flex: 1; /* Chia đều không gian giữa các phần tử */
+}
+
+.cart-item-name {
+    font-size: 16px; /* Kích thước chữ cho tên sản phẩm */
+    font-weight: bold; /* Làm nổi bật tên sản phẩm */
+    color: #333; /* Màu chữ tối cho dễ đọc */
+}
+
+.cart-item-price {
+    flex: 1; /* Giá sản phẩm chiếm ít không gian hơn */
+    text-align: right; /* Canh phải cho giá */
+    font-size: 16px; /* Kích thước chữ cho giá sản phẩm */
+    color: #888; /* Màu chữ nhẹ hơn cho giá */
+}
+
+.delete-button {
+    background-color: transparent; /* Nền trong suốt cho nút xóa */
+    border: none; /* Không có đường viền */
+    cursor: pointer; /* Hiển thị con trỏ tay khi hover */
+    color: green; /* Màu đỏ cho nút xóa */
+    font-size: 20px; /* Kích thước chữ cho biểu tượng */}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.cart-table th, .cart-table td {
+    padding: 15px;
+    text-align: left;
+}
+
+.cart-table th {
+    background: linear-gradient(to right, #f3c9c4, #FFB6C1); /* Gradient màu hồng nhạt */
+    color: white;
+}
+
+.cart-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+}
+
+.cart-item-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+    margin-right: 15px;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.quantity-control button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.quantity-control button:hover {
+    background-color: #0056b3;
+}
+
+.delete-button {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 10px;
+}
+
+.delete-button:hover {
+    background-color: darkred;
+}
+
+.order-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 20px auto;
+    display: block;
+    transition: background-color 0.3s;
+    width: 200px; /* Fixed width for consistency */
+}
+
+.order-button:hover {
+    background-color: #218838;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.order-modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.order-status-popup {
+    margin: 20px auto;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.cart-summary {
+    margin-top: 20px;
+}
+
+.cart-summary h3 {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.customer-info {
+    margin-bottom: 20px;
+}
+
+.customer-info label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.customer-info input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.customer-info input:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+

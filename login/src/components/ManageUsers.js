@@ -19,9 +19,10 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    Checkbox,
 } from '@mui/material';
-import './ManageUsers.css'; // Nhập file CSS
-import HeaderAdmin from './HeaderAdmin'; // Đảm bảo đường dẫn đúng
+import './ManageUsers.css';
+import HeaderAdmin from './HeaderAdmin';
 
 const ManageUsers = () => {
     const [users, setUsers] = useState([]);
@@ -31,10 +32,12 @@ const ManageUsers = () => {
     const [newUser, setNewUser] = useState({ username: '', email: '', role: '', password: '' });
     const [editUserId, setEditUserId] = useState(null);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [dialogOpen, setDialogOpen] = useState(false); // Thêm state cho dialog
-    const [confirmDeleteDialogOpen, setConfirmDeleteDialogOpen] = useState(false); // State cho dialog xác nhận xóa
-    const [userIdToDelete, setUserIdToDelete] = useState(null); // ID người dùng để xóa
-    const [hoverButton, setHoverButton] = useState(null); // Thêm state để theo dõi hover
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [confirmDeleteDialogOpen, setConfirmDeleteDialogOpen] = useState(false);
+    const [userIdToDelete, setUserIdToDelete] = useState(null);
+    const [hoverButton, setHoverButton] = useState(null);
+    const [selectedUsers, setSelectedUsers] = useState([]); // State cho người dùng đã chọn
+    const [confirmDeleteSelectedDialogOpen, setConfirmDeleteSelectedDialogOpen] = useState(false); // For multi-user delete confirmation
 
     const fetchUsers = useCallback(async () => {
         setLoading(true);
@@ -52,11 +55,11 @@ const ManageUsers = () => {
         } finally {
             setLoading(false);
         }
-    }, []); // Chỉ cần chạy một lần
+    }, []);
 
     useEffect(() => {
         fetchUsers();
-    }, [fetchUsers]); // Thêm fetchUsers vào mảng phụ thuộc
+    }, [fetchUsers]);
 
     const handleDeleteUser = async (userId) => {
         setLoading(true);
@@ -89,7 +92,7 @@ const ManageUsers = () => {
             });
             setSuccess('Thêm người dùng thành công!');
             setSnackbarOpen(true);
-            handleCloseDialog(); // Đóng dialog sau khi thêm
+            handleCloseDialog();
             fetchUsers();
         } catch (err) {
             setError(err.response?.data?.msg || 'Lỗi khi thêm người dùng.');
@@ -102,7 +105,7 @@ const ManageUsers = () => {
     const handleEditUser = (user) => {
         setEditUserId(user._id);
         setNewUser({ username: user.username, email: user.email, role: user.role, password: '' });
-        setDialogOpen(true); // Mở dialog khi chỉnh sửa
+        setDialogOpen(true);
     };
 
     const handleUpdateUser = async () => {
@@ -116,7 +119,7 @@ const ManageUsers = () => {
             });
             setSuccess('Cập nhật người dùng thành công!');
             setSnackbarOpen(true);
-            handleCloseDialog(); // Đóng dialog sau khi cập nhật
+            handleCloseDialog();
             fetchUsers();
         } catch (err) {
             setError(err.response?.data?.msg || 'Lỗi khi cập nhật người dùng.');
@@ -127,14 +130,14 @@ const ManageUsers = () => {
     };
 
     const handleOpenDialog = () => {
-        setEditUserId(null); // Đặt lại ID khi mở dialog để thêm
+        setEditUserId(null);
         setNewUser({ username: '', email: '', role: '', password: '' });
         setDialogOpen(true);
     };
 
     const handleCloseDialog = () => {
         setDialogOpen(false);
-        setEditUserId(null); // Đặt lại ID khi đóng dialog
+        setEditUserId(null);
     };
 
     const handleCloseSnackbar = () => {
@@ -144,13 +147,54 @@ const ManageUsers = () => {
     };
 
     const handleDelete = (userId) => {
-        setUserIdToDelete(userId); // Lưu ID người dùng để xóa
-        setConfirmDeleteDialogOpen(true); // Mở dialog xác nhận
+        setUserIdToDelete(userId);
+        setConfirmDeleteDialogOpen(true);
     };
 
     const handleCloseConfirmDeleteDialog = () => {
         setConfirmDeleteDialogOpen(false);
-        setUserIdToDelete(null); // Đặt lại ID khi đóng dialog
+        setUserIdToDelete(null);
+    };
+
+    const handleSelectUser = (userId) => {
+        setSelectedUsers((prevSelected) => {
+            if (prevSelected.includes(userId)) {
+                return prevSelected.filter((id) => id !== userId);
+            } else {
+                return [...prevSelected, userId];
+            }
+        });
+    };
+
+    const handleDeleteSelectedUsers = async () => {
+        setLoading(true);
+        try {
+            const token = localStorage.getItem('token');
+            await Promise.all(selectedUsers.map(userId => 
+                axios.delete(`http://localhost:5000/api/auth/delete/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+            ));
+            setSuccess('Đã xóa tất cả người dùng đã chọn!');
+            setSnackbarOpen(true);
+            setSelectedUsers([]); // Reset danh sách người dùng đã chọn
+            fetchUsers();
+        } catch (err) {
+            setError('Lỗi khi xóa người dùng.');
+            setSnackbarOpen(true);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleOpenDeleteSelectedDialog = () => {
+        setConfirmDeleteSelectedDialogOpen(true);
+    };
+
+    const handleCloseDeleteSelectedDialog = () => {
+        setConfirmDeleteSelectedDialogOpen(false);
     };
 
     return (
@@ -181,19 +225,28 @@ const ManageUsers = () => {
                 sx={{
                     backgroundColor: hoverButton === 'add' ? '#4caf50' : undefined,
                     '&:hover': {
-                        backgroundColor: '#4caf50', // Màu xanh lá cây khi hover
+                        backgroundColor: '#4caf50',
                     },
                 }}
             >
                 Thêm Người Dùng
             </Button>
 
-            {/* Bảng hiển thị danh sách người dùng */}
+            <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleOpenDeleteSelectedDialog} // Open confirmation dialog instead of direct deletion
+                disabled={selectedUsers.length === 0} // Disable if no users selected
+                style={{ marginBottom: '20px', marginLeft: '10px' }}
+            >
+                Xóa Người Dùng Đã Chọn
+            </Button>
+
             <TableContainer component={Paper} className="table-container">
                 <Table sx={{ minWidth: 650 }} aria-label="user table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>ID</TableCell>
+                            <TableCell padding="checkbox"></TableCell>
                             <TableCell>Tên</TableCell>
                             <TableCell>Email</TableCell>
                             <TableCell>Vai trò</TableCell>
@@ -203,6 +256,12 @@ const ManageUsers = () => {
                     <TableBody>
                         {users.map((user) => (
                             <TableRow key={user._id}>
+                                <TableCell padding="checkbox">
+                                    <Checkbox
+                                        checked={selectedUsers.includes(user._id)}
+                                        onChange={() => handleSelectUser(user._id)}
+                                    />
+                                </TableCell>
                                 <TableCell>{user.username}</TableCell>
                                 <TableCell>{user.email}</TableCell>
                                 <TableCell>{user.role}</TableCell>
@@ -219,7 +278,7 @@ const ManageUsers = () => {
                                     <Button
                                         variant="outlined"
                                         color="secondary"
-                                        onClick={() => handleDelete(user._id)} // Mở dialog xác nhận
+                                        onClick={() => handleDelete(user._id)}
                                         className="custom-button"
                                     >
                                         Xóa
@@ -234,8 +293,8 @@ const ManageUsers = () => {
             <Dialog 
                 open={dialogOpen} 
                 onClose={handleCloseDialog} 
-                maxWidth="sm" // Đặt chiều rộng tối đa của dialog
-                fullWidth // Chiếm toàn bộ chiều rộng
+                maxWidth="sm"
+                fullWidth
             >
                 <DialogTitle>{editUserId ? 'Chỉnh Sửa Người Dùng' : 'Thêm Người Dùng'}</DialogTitle>
                 <DialogContent style={{ padding: '16px 24px', minHeight: '300px' }}>
@@ -288,7 +347,7 @@ const ManageUsers = () => {
                         sx={{
                             backgroundColor: hoverButton === 'cancel' ? '#4caf50' : undefined,
                             '&:hover': {
-                                backgroundColor: '#4caf50', // Màu xanh lá cây khi hover
+                                backgroundColor: '#4caf50',
                             },
                         }}
                     >
@@ -303,7 +362,7 @@ const ManageUsers = () => {
                         sx={{
                             backgroundColor: hoverButton === (editUserId ? 'update' : 'add') ? '#4caf50' : undefined,
                             '&:hover': {
-                                backgroundColor: '#4caf50', // Màu xanh lá cây khi hover
+                                backgroundColor: '#4caf50',
                             },
                         }}
                     >
@@ -326,12 +385,10 @@ const ManageUsers = () => {
                     <Button onClick={handleCloseConfirmDeleteDialog} color="secondary"
                     sx={{
                         '&:hover': {
-                            backgroundColor: 'green', // Màu nền khi hover
-                            color: 'white' // Màu chữ khi hover
+                            backgroundColor: 'green',
+                            color: 'white'
                         }
-                    }}
-                    >
-                        
+                    }}>
                         Hủy
                     </Button>
                     <Button
@@ -342,10 +399,36 @@ const ManageUsers = () => {
                         color="primary"
                         sx={{
                             '&:hover': {
-                                backgroundColor: 'green', // Màu nền khi hover
-                                color: 'white' // Màu chữ khi hover
+                                backgroundColor: 'green',
+                                color: 'white'
                             }
                         }}
+                    >
+                        Xóa
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={confirmDeleteSelectedDialogOpen}
+                onClose={handleCloseDeleteSelectedDialog}
+                maxWidth="sm"
+                fullWidth
+            >
+                <DialogTitle>Xác Nhận Xóa Người Dùng Đã Chọn</DialogTitle>
+                <DialogContent>
+                    <Typography>Bạn có chắc chắn muốn xóa những người dùng đã chọn không?</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDeleteSelectedDialog} color="secondary">
+                        Hủy
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            handleDeleteSelectedUsers();
+                            handleCloseDeleteSelectedDialog();
+                        }}
+                        color="primary"
                     >
                         Xóa
                     </Button>

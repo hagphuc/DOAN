@@ -17,18 +17,21 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Paper
+    Paper,
+    Checkbox
 } from '@mui/material';
 import './ManageProducts.css';
 
 const ManageProducts = () => {
     const [products, setProducts] = useState([]);
+    const [selectedProducts, setSelectedProducts] = useState([]);
     const [error, setError] = useState('');
     const [openDialog, setOpenDialog] = useState(false);
     const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+    const [openConfirmDeleteAllDialog, setOpenConfirmDeleteAllDialog] = useState(false); // Dialog xác nhận xóa tất cả
     const [editingProduct, setEditingProduct] = useState(null);
     const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', image: null });
-    const [productIdToDelete, setProductIdToDelete] = useState(null); // Trạng thái để lưu ID sản phẩm cần xóa
+    const [productIdToDelete, setProductIdToDelete] = useState(null);
     const [notification, setNotification] = useState({ open: false, message: '', severity: 'success' });
 
     useEffect(() => {
@@ -91,8 +94,8 @@ const ManageProducts = () => {
     };
 
     const handleConfirmDeleteProduct = (id) => {
-        setProductIdToDelete(id); // Lưu id sản phẩm để xóa
-        setOpenConfirmDialog(true); // Mở dialog xác nhận
+        setProductIdToDelete(id);
+        setOpenConfirmDialog(true);
     };
 
     const handleDeleteProduct = async () => {
@@ -105,12 +108,36 @@ const ManageProducts = () => {
             });
             setNotification({ open: true, message: 'Sản phẩm đã được xóa thành công!', severity: 'success' });
             fetchProducts();
-            handleCloseConfirmDialog(); // Đóng dialog xác nhận
+            handleCloseConfirmDialog();
         } catch (err) {
             setNotification({ open: true, message: 'Lỗi khi xóa sản phẩm!', severity: 'error' });
         }
     };
 
+    const handleDeleteSelectedProducts = () => {
+        setOpenConfirmDeleteAllDialog(true); // Hiển thị dialog xác nhận xóa tất cả
+    };
+
+    const confirmDeleteSelectedProducts = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            await Promise.all(selectedProducts.map(productId =>
+                axios.delete(`http://localhost:5000/api/products/${productId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+            ));
+            setNotification({ open: true, message: 'Các sản phẩm đã được xóa thành công!', severity: 'success' });
+            setSelectedProducts([]); // Xóa danh sách sản phẩm đã chọn sau khi xóa
+            fetchProducts();
+            
+            handleCloseConfirmDeleteAllDialog(); // Đóng dialog xác nhận xóa
+        } catch (err) {
+            setNotification({ open: true, message: 'Lỗi khi xóa sản phẩm!', severity: 'error' });
+        }
+    };    
+    
     const handleAddProduct = () => {
         setEditingProduct(null);
         setNewProduct({ name: '', price: '', description: '', image: null });
@@ -125,12 +152,24 @@ const ManageProducts = () => {
         setOpenConfirmDialog(false);
     };
 
+    const handleCloseConfirmDeleteAllDialog = () => {
+        setOpenConfirmDeleteAllDialog(false);
+    };
+
     const handleCloseSnackbar = () => {
         setNotification({ ...notification, open: false });
     };
 
     const handleImageChange = (e) => {
         setNewProduct({ ...newProduct, image: e.target.files[0] });
+    };
+
+    const handleSelectProduct = (productId) => {
+        setSelectedProducts((prevSelected) =>
+            prevSelected.includes(productId)
+                ? prevSelected.filter((id) => id !== productId)
+                : [...prevSelected, productId]
+        );
     };
 
     return (
@@ -153,10 +192,28 @@ const ManageProducts = () => {
             >
                 Thêm Sản Phẩm
             </Button>
+            <Button
+                variant="contained"
+                color="error"
+                onClick={handleDeleteSelectedProducts}
+                disabled={selectedProducts.length === 0} // Disable if no products are selected
+                sx={{
+                    '&:hover': {
+                        backgroundColor: 'darkred',
+                        color: 'white'
+                    },
+                    marginLeft: '10px',
+                    top: '-10px',
+                    height: '48px'
+                }}
+            >
+                Xóa Sản Phẩm Đã Chọn
+            </Button>
             <TableContainer component={Paper} className="product-table">
                 <Table aria-label="product table">
                     <TableHead>
                         <TableRow>
+                            <TableCell className="table-cell">Chọn</TableCell>
                             <TableCell className="table-cell">Hình Ảnh</TableCell>
                             <TableCell className="table-cell">Tên Sản Phẩm</TableCell>
                             <TableCell className="table-cell">Giá</TableCell>
@@ -168,7 +225,18 @@ const ManageProducts = () => {
                         {products.map((product) => (
                             <TableRow key={product._id}>
                                 <TableCell>
-                                    <img src={`http://localhost:5000/${product.imageUrl}`} alt={product.name} className="product-image" />
+                                    <Checkbox
+                                        checked={selectedProducts.includes(product._id)}
+                                        onChange={() => handleSelectProduct(product._id)}
+                                    />
+                                </TableCell>
+                                <TableCell>
+                                    <img
+                                        src={`http://localhost:5000/${product.imageUrl}`}
+                                        alt={product.name}
+                                        className="product-image"
+                                        style={{ width: '200px', height: '200px' }}
+                                    />
                                 </TableCell>
                                 <TableCell>{product.name}</TableCell>
                                 <TableCell>{product.price} VNĐ</TableCell>
@@ -189,7 +257,7 @@ const ManageProducts = () => {
                                         Sửa
                                     </Button>
                                     <Button
-                                        onClick={() => handleConfirmDeleteProduct(product._id)} // Gọi hàm xác nhận xóa
+                                        onClick={() => handleConfirmDeleteProduct(product._id)}
                                         variant="contained"
                                         color="error"
                                         sx={{
@@ -209,7 +277,7 @@ const ManageProducts = () => {
             </TableContainer>
 
             <Dialog open={openDialog} onClose={handleCloseDialog}>
-                <DialogTitle>{editingProduct ? 'Sửa Sản Phẩm' : 'Thêm Sản Phẩm'}</DialogTitle>
+                <DialogTitle>{editingProduct ? 'Cập Nhật Sản Phẩm' : 'Thêm Sản Phẩm'}</DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
@@ -288,8 +356,8 @@ const ManageProducts = () => {
                         color="primary"
                         sx={{
                             '&:hover': {
-                                backgroundColor: 'green', // Màu nền khi hover
-                                color: 'white' // Màu chữ khi hover
+                                backgroundColor: 'green',
+                                color: 'white'
                             }
                         }}
                     >
@@ -300,8 +368,42 @@ const ManageProducts = () => {
                         color="error"
                         sx={{
                             '&:hover': {
-                                backgroundColor: 'green', // Màu nền khi hover
-                                color: 'white' // Màu chữ khi hover
+                                backgroundColor: 'green',
+                                color: 'white'
+                            }
+                        }}
+                    >
+                        Xóa
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Dialog xác nhận xóa tất cả sản phẩm đã chọn */}
+            <Dialog open={openConfirmDeleteAllDialog} onClose={handleCloseConfirmDeleteAllDialog}>
+                <DialogTitle>Xác Nhận Xóa</DialogTitle>
+                <DialogContent>
+                    <Typography>Bạn có chắc chắn muốn xóa tất cả sản phẩm đã chọn không?</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={handleCloseConfirmDeleteAllDialog}
+                        color="primary"
+                        sx={{
+                            '&:hover': {
+                                backgroundColor: 'green',
+                                color: 'white'
+                            }
+                        }}
+                    >
+                        Hủy
+                    </Button>
+                    <Button
+                        onClick={confirmDeleteSelectedProducts}
+                        color="error"
+                        sx={{
+                            '&:hover': {
+                                backgroundColor: 'green',
+                                color: 'white'
                             }
                         }}
                     >
@@ -324,3 +426,4 @@ const ManageProducts = () => {
     );
 };
 
+export default ManageProducts;
