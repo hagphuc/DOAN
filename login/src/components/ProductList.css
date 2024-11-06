@@ -1,34 +1,38 @@
-/* ProductList.css */
-
 /* Bố cục danh sách sản phẩm */
 .product-list {
-    display: flex;
-    flex-wrap: wrap; /* Cho phép sản phẩm xuống dòng khi không đủ chỗ */
-    justify-content: space-between; /* Căn giữa sản phẩm */
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 sản phẩm trên mỗi hàng */
+    gap: 16px; /* Khoảng cách giữa các sản phẩm */
+    padding: 16px;
 }
 
 /* Thẻ sản phẩm */
 .product-item {
     border: 1px solid #ccc; /* Đường viền cho sản phẩm */
     border-radius: 8px; /* Bo tròn góc sản phẩm */
-    padding: 10px; /* Padding cho sản phẩm */
-    margin: 10px; /* Khoảng cách giữa các sản phẩm */
-    width: calc(20% - 20px); /* Chiều rộng của sản phẩm (5 sản phẩm trên 1 hàng) */
+    padding: 16px; /* Padding cho sản phẩm */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow cho sản phẩm */
-    display: flex; /* Sử dụng flexbox để căn chỉnh nội dung */
-    flex-direction: column; /* Sắp xếp theo chiều dọc */
-    height: 100%; /* Chiều cao sản phẩm tự động */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center; /* Căn giữa nội dung */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hiệu ứng hover cho sản phẩm */
+.product-item:hover {
+    transform: translateY(-5px); /* Nâng sản phẩm lên khi hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Tăng shadow khi hover */
 }
 
 /* Hình ảnh sản phẩm */
 .product-item img {
     width: 100%; /* Chiều rộng hình ảnh 100% */
     height: 200px; /* Chiều cao cố định cho hình ảnh */
-    object-fit: cover; /* Đảm bảo hình ảnh được cắt sao cho không bị méo */
-    border-radius: 8px; /* Bo tròn góc cho hình ảnh */
-    margin-bottom: 10px; /* Khoảng cách dưới hình ảnh */
-    transition: transform 0.3s ease; /* Thêm hiệu ứng chuyển động khi hover */
+    object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
 }
 
 /* Hiệu ứng hover cho hình ảnh */
@@ -38,68 +42,97 @@
 
 /* Thông tin sản phẩm */
 .product-info {
-    display: flex; /* Sử dụng flexbox cho phần thông tin */
-    flex-direction: column; /* Sắp xếp theo chiều dọc */
+    display: flex;
+    flex-direction: column;
     flex: 1; /* Chiếm không gian còn lại */
     justify-content: space-between; /* Căn giữa thông tin và nút */
 }
 
 /* Tiêu đề sản phẩm */
 .product-item h3 {
-    color: #333; /* Màu sắc cho tiêu đề sản phẩm */
-    font-size: 1.2em; /* Kích thước chữ lớn hơn một chút */
-    margin: 10px 0; /* Khoảng cách cho tiêu đề */
+    color: #333;
+    font-size: 1.2em;
+    margin: 10px 0;
 }
 
 /* Giá sản phẩm */
 .product-item .price {
-    font-size: 1.2em; /* Kích thước chữ cho giá */
-    font-weight: bold; /* Đậm cho giá */
-    margin: 10px 0; /* Khoảng cách cho giá */
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 10px 0;
 }
 
 /* Nút thêm vào giỏ hàng */
 .product-item button {
-    margin-top: auto; /* Đẩy nút xuống cuối cùng */
+    padding: 8px 12px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.product-item button:hover {
+    background-color: #218838;
 }
 
 /* Giỏ hàng */
 .cart {
-    margin-top: 20px; /* Khoảng cách trên giỏ hàng */
-    padding: 10px; /* Padding cho giỏ hàng */
-    background-color: #f0f0f0; /* Màu nền cho giỏ hàng */
-    border-radius: 8px; /* Bo tròn góc giỏ hàng */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Shadow cho giỏ hàng */
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .cart h2 {
-    margin: 0 0 10px; /* Khoảng cách cho tiêu đề giỏ hàng */
+    margin: 0 0 10px;
 }
 
 .cart ul {
-    list-style-type: none; /* Bỏ dấu chấm đầu dòng */
-    padding: 0; /* Bỏ padding cho ul */
+    list-style-type: none;
+    padding: 0;
 }
 
 .cart li {
-    padding: 5px 0; /* Khoảng cách cho từng item trong giỏ hàng */
-    border-bottom: 1px solid #ccc; /* Đường ngăn cách giữa các item */
-}
-
-/* Hiệu ứng hover cho sản phẩm */
-.product-item:hover {
-    transform: translateY(-5px); /* Nâng sản phẩm lên khi hover */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Tăng shadow khi hover */
+    padding: 5px 0;
+    border-bottom: 1px solid #ccc;
 }
 
 /* Mô tả sản phẩm */
 .product-item p {
-    color: #666; /* Màu sắc cho mô tả */
-    margin: 5px 0; /* Thêm khoảng cách cho mô tả */
+    color: #666;
+    margin: 5px 0;
 }
 
 /* Thông báo lỗi */
 .error-message {
-    color: red; /* Màu đỏ cho thông báo lỗi */
-    font-weight: bold; /* Đậm cho thông báo lỗi */
+    color: red;
+    font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .product-list {
+        grid-template-columns: repeat(4, 1fr); /* 4 sản phẩm trên mỗi hàng */
+    }
+}
+
+@media (max-width: 992px) {
+    .product-list {
+        grid-template-columns: repeat(3, 1fr); /* 3 sản phẩm trên mỗi hàng */
+    }
+}
+
+@media (max-width: 768px) {
+    .product-list {
+        grid-template-columns: repeat(2, 1fr); /* 2 sản phẩm trên mỗi hàng */
+    }
+}
+
+@media (max-width: 576px) {
+    .product-list {
+        grid-template-columns: 1fr; /* 1 sản phẩm trên mỗi hàng */
+    }
 }

@@ -94,6 +94,13 @@ const HeaderAdmin = () => {
           >
             Manage Products
           </Button>
+          <Button 
+          color="inherit"
+          onClick={() => navigate('/admin/manage-orders')} 
+          sx={{ mx: 1, padding: '4px 8px' }} // Giảm padding của button
+          >
+            Manage Orders
+          </Button>
 
           {/* Mục Hồ sơ người dùng */}
           <Box sx={{ flexGrow: 0 }}>

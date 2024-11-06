@@ -1,0 +1,71 @@
+/* ManageOrders.css */
+
+/* Phần chung */
+.manage-orders {
+  padding: 20px;
+}
+
+.manage-orders .title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #1976d2;
+}
+.dialog-title {
+  background: linear-gradient(to right, #f3c9c4, #FFB6C1); /* Gradient màu hồng nhạt */
+  color: white;
+  text-align: center;
+  font-weight: bold;
+}
+
+.dialog-content {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 600px;
+}
+
+/* Định dạng cho các phần */
+.dialog-section {
+  margin-bottom: 30px;
+}
+
+.dialog-header {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #1976d2;
+}
+
+.dialog-item {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+/* Thêm kiểu cho từng sản phẩm */
+.product-item {
+  background-color: #f7f7f7;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.product-info {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.total-amount {
+  padding: 10px;
+  background-color: #f1f1f1;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.dialog-actions {
+  justify-content: center;
+}
+

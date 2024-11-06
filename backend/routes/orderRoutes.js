@@ -79,11 +79,50 @@ router.post('/', async (req, res) => {
  */
 router.get('/', async (req, res) => {
     try {
-        const orders = await Order.find();
+        // Populate các trường productId để lấy thêm tên sản phẩm, mã sản phẩm và giá
+        const orders = await Order.find().populate('items.productId', 'name price'); // Giả sử bạn có các trường `name` và `price` trong mô hình Product
         res.json(orders);
     } catch (error) {
-        console.error('Error fetching orders:', error);
-        res.status(500).json({ success: false, message: 'Failed to retrieve orders' });
+        console.error('Lỗi khi lấy đơn hàng:', error);
+        res.status(500).json({ success: false, message: 'Không thể lấy đơn hàng' });
+    }
+});
+
+/**
+ * @swagger
+ * /api/orders/{orderId}:
+ *   delete:
+ *     summary: Xóa đơn hàng theo ID
+ *     tags: [Orders]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         description: ID của đơn hàng cần xóa
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Đơn hàng đã được xóa thành công
+ *       404:
+ *         description: Không tìm thấy đơn hàng
+ *       500:
+ *         description: Lỗi khi xóa đơn hàng
+ */
+router.delete('/:orderId', async (req, res) => {
+    const { orderId } = req.params;
+    try {
+        // Tìm và xóa đơn hàng theo ID
+        const deletedOrder = await Order.findByIdAndDelete(orderId);
+        if (!deletedOrder) {
+            return res.status(404).json({ success: false, message: 'Không tìm thấy đơn hàng' });
+        }
+        res.status(200).json({ success: true, message: 'Đơn hàng đã được xóa thành công' });
+    } catch (error) {
+        console.error('Lỗi khi xóa đơn hàng:', error);
+        res.status(500).json({ success: false, message: 'Lỗi khi xóa đơn hàng' });
     }
 });
 

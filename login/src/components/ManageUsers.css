@@ -15,8 +15,9 @@
 /* Tiêu đề */
 .title {
     font-size: 2rem; /* Kích thước chữ lớn */
-    color: #333; /* Màu chữ */
+    color: #1976d2;
     text-align: center; /* Căn giữa tiêu đề */
+    
 }
 
 /* Phần form thêm và chỉnh sửa người dùng */
@@ -36,11 +37,11 @@
 
 /* Cấu hình cho bảng hiển thị danh sách người dùng */
 .table-container {
-    margin: 20px 0; /* Khoảng cách trên và dưới của bảng */
-    border: 2px solid #3f51b5; /* Đường viền nổi bật cho bảng */
+    border: 2px solid #b47ba2; /* Đường viền nổi bật cho bảng */
     border-radius: 8px; /* Bo góc cho bảng */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Thêm bóng cho bảng */
     overflow: hidden; /* Đảm bảo các góc bo được hiển thị đúng */
+    overflow-x: auto;
 }
 
 /* Định dạng bảng */
@@ -110,11 +111,48 @@
     margin: 5px; /* Khoảng cách giữa các nút */
 }
 
-.custom-button {
-    transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu */
-}
-
 .custom-button:hover {
     background-color: #4caf50; /* Màu xanh lá cây */
     color: white; /* Đổi màu chữ sang trắng */
+}
+
+
+/* Đảm bảo bảng có chiều rộng cố định và chia đều 5 cột */
+.MuiTable-root {
+    table-layout: fixed; /* Giúp bảng có layout cố định */
+    width: 100%;
+}
+
+/* Tiêu đề của bảng */
+.table-cell {
+    padding: 16px;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #333;
+    background: linear-gradient(to right, #f3c9c4, #FFB6C1); /* Màu nền cho tiêu đề bảng */
+    text-align: center;
+    border-bottom: 2px solid #ddd;
+    width: 20%; /* Đảm bảo mỗi cột có cùng độ rộng */
+}
+
+/* Các cell trong body của bảng */
+.table-cell-body {
+    padding: 12px;
+    text-align: center;
+    font-size: 0.95rem;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    width: 20%; /* Đảm bảo mỗi cột có cùng độ rộng */
+}
+
+/* Các nút trong cột thao tác */
+.custom-button {
+    font-size: 0.875rem;
+    padding: 6px 12px;
+    color: #2196f3;
+    border-color: #2196f3;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+    transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu */
+
 }

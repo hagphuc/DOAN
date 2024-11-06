@@ -23,6 +23,9 @@ import {
 } from '@mui/material';
 import './ManageUsers.css';
 import HeaderAdmin from './HeaderAdmin';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const ManageUsers = () => {
     const [users, setUsers] = useState([]);
@@ -60,6 +63,15 @@ const ManageUsers = () => {
     useEffect(() => {
         fetchUsers();
     }, [fetchUsers]);
+
+    // Select/Deselect all users
+    const handleSelectAllUsers = () => {
+        if (selectedUsers.length === users.length) {
+            setSelectedUsers([]); // Deselect all
+        } else {
+            setSelectedUsers(users.map((user) => user._id)); // Select all
+        }
+    };
 
     const handleDeleteUser = async (userId) => {
         setLoading(true);
@@ -170,16 +182,18 @@ const ManageUsers = () => {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            await Promise.all(selectedUsers.map(userId => 
-                axios.delete(`http://localhost:5000/api/auth/delete/${userId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                })
-            ));
+            await Promise.all(
+                selectedUsers.map((userId) =>
+                    axios.delete(`http://localhost:5000/api/auth/delete/${userId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    })
+                )
+            );
             setSuccess('Đã xóa tất cả người dùng đã chọn!');
             setSnackbarOpen(true);
-            setSelectedUsers([]); // Reset danh sách người dùng đã chọn
+            setSelectedUsers([]);
             fetchUsers();
         } catch (err) {
             setError('Lỗi khi xóa người dùng.');
@@ -222,6 +236,7 @@ const ManageUsers = () => {
                 style={{ marginBottom: '20px' }}
                 onMouseEnter={() => setHoverButton('add')}
                 onMouseLeave={() => setHoverButton(null)}
+                startIcon={<AddIcon />} // Add this line
                 sx={{
                     backgroundColor: hoverButton === 'add' ? '#4caf50' : undefined,
                     '&:hover': {
@@ -232,24 +247,42 @@ const ManageUsers = () => {
                 Thêm Người Dùng
             </Button>
 
-            <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleOpenDeleteSelectedDialog} // Open confirmation dialog instead of direct deletion
-                disabled={selectedUsers.length === 0} // Disable if no users selected
-                style={{ marginBottom: '20px', marginLeft: '10px' }}
-            >
-                Xóa Người Dùng Đã Chọn
-            </Button>
+            {selectedUsers.length > 0 && (
+                <Button
+                    variant="contained"
+                    color="error"
+                    startIcon={<DeleteIcon />} // Add this line
+                    onClick={handleOpenDeleteSelectedDialog}
+                    sx={{
+                        '&:hover': {
+                            backgroundColor: 'darkred',
+                            color: 'white'
+                        },
+                        marginLeft: '10px',
+                        top: '-10px',
+                        height: '38px'
+                    }}
+                >
+                    Xóa User Đã Chọn
+                </Button>
+            )}
             <TableContainer component={Paper} className="table-container">
-                <Table sx={{ minWidth: 650 }} aria-label="user table">
+                <Table aria-label="product table">
                     <TableHead>
                         <TableRow>
-                            <TableCell padding="checkbox"></TableCell>
-                            <TableCell>Tên</TableCell>
-                            <TableCell>Email</TableCell>
-                            <TableCell>Vai trò</TableCell>
-                            <TableCell>Thao tác</TableCell>
+                            <TableCell className="table-cell">
+                                <Button
+                                    variant="outlined"
+                                    color={selectedUsers.length === users.length ? "primary" : "default"}
+                                    onClick={handleSelectAllUsers}
+                                >
+                                    {selectedUsers.length === users.length ? "Bỏ Chọn Tất Cả" : "Chọn Tất Cả"}
+                                </Button>
+                            </TableCell>
+                            <TableCell className="table-cell">Tên</TableCell>
+                            <TableCell className="table-cell">Email</TableCell>
+                            <TableCell className="table-cell">Vai trò</TableCell>
+                            <TableCell className="table-cell">Thao tác</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -261,24 +294,26 @@ const ManageUsers = () => {
                                         onChange={() => handleSelectUser(user._id)}
                                     />
                                 </TableCell>
-                                <TableCell>{user.username}</TableCell>
-                                <TableCell>{user.email}</TableCell>
-                                <TableCell>{user.role}</TableCell>
-                                <TableCell>
+                                <TableCell className="table-cell-body">{user.username}</TableCell>
+                                <TableCell className="table-cell-body">{user.email}</TableCell>
+                                <TableCell className="table-cell-body">{user.role}</TableCell>
+                                <TableCell className="table-cell-body">
                                     <Button
                                         variant="outlined"
                                         color="primary"
                                         onClick={() => handleEditUser(user)}
                                         className="custom-button"
                                         style={{ marginRight: '8px' }}
+                                        startIcon={<EditIcon />}
                                     >
-                                        Chỉnh sửa
+                                        Cập nhật
                                     </Button>
                                     <Button
                                         variant="outlined"
                                         color="secondary"
                                         onClick={() => handleDelete(user._id)}
                                         className="custom-button"
+                                        startIcon={<DeleteIcon />}
                                     >
                                         Xóa
                                     </Button>
@@ -293,8 +328,9 @@ const ManageUsers = () => {
                 onClose={handleCloseDialog} 
                 maxWidth="sm"
                 fullWidth
-            >
-                <DialogTitle>{editUserId ? 'Chỉnh Sửa Người Dùng' : 'Thêm Người Dùng'}</DialogTitle>
+                >
+                <DialogTitle style={{ textAlign: 'center' }}>
+                {editUserId ? 'Chỉnh Sửa Người Dùng' : 'Thêm Người Dùng'}</DialogTitle>
                 <DialogContent style={{ padding: '16px 24px', minHeight: '300px' }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>

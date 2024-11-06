@@ -21,6 +21,7 @@ import {
     Checkbox
 } from '@mui/material';
 import './ManageProducts.css';
+import { Add, Edit, Delete } from '@mui/icons-material'; // Import the icons
 
 const ManageProducts = () => {
     const [products, setProducts] = useState([]);
@@ -33,7 +34,7 @@ const ManageProducts = () => {
     const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', image: null });
     const [productIdToDelete, setProductIdToDelete] = useState(null);
     const [notification, setNotification] = useState({ open: false, message: '', severity: 'success' });
-
+    
     useEffect(() => {
         fetchProducts();
     }, []);
@@ -171,6 +172,16 @@ const ManageProducts = () => {
                 : [...prevSelected, productId]
         );
     };
+    const handleSelectAllProducts = () => {
+        if (selectedProducts.length === products.length) {
+            // Nếu tất cả sản phẩm đã được chọn, bỏ chọn tất cả
+            setSelectedProducts([]);
+        } else {
+            // Nếu chưa chọn hết tất cả, chọn tất cả
+            setSelectedProducts(products.map(product => product._id));
+        }
+    };
+    
 
     return (
         <div className="manage-products">
@@ -182,6 +193,7 @@ const ManageProducts = () => {
             <Button
                 variant="contained"
                 color="primary"
+                startIcon={<Add />} // Add icon
                 onClick={handleAddProduct}
                 sx={{
                     '&:hover': {
@@ -192,28 +204,39 @@ const ManageProducts = () => {
             >
                 Thêm Sản Phẩm
             </Button>
-            <Button
-                variant="contained"
-                color="error"
-                onClick={handleDeleteSelectedProducts}
-                disabled={selectedProducts.length === 0} // Disable if no products are selected
-                sx={{
-                    '&:hover': {
-                        backgroundColor: 'darkred',
-                        color: 'white'
-                    },
-                    marginLeft: '10px',
-                    top: '-10px',
-                    height: '48px'
-                }}
-            >
-                Xóa Sản Phẩm Đã Chọn
-            </Button>
+            {selectedProducts.length > 0 && (
+                <Button
+                    variant="contained"
+                    color="error"
+                    startIcon={<Delete />} // Add icon for delete all
+                    onClick={handleDeleteSelectedProducts}
+                    sx={{
+                        '&:hover': {
+                            backgroundColor: 'darkred',
+                            color: 'white'
+                        },
+                        marginLeft: '10px',
+                        top: '-10px',
+                        height: '48px'
+                    }}
+                >
+                    Xóa Sản Phẩm Đã Chọn
+                </Button>
+            )}
+
             <TableContainer component={Paper} className="product-table">
                 <Table aria-label="product table">
                     <TableHead>
                         <TableRow>
-                            <TableCell className="table-cell">Chọn</TableCell>
+                            <TableCell className="table-cell">
+                                <Button
+                                    variant="outlined"
+                                    color={selectedProducts.length === products.length ? "primary" : "default"}
+                                    onClick={handleSelectAllProducts}
+                                >
+                                    {selectedProducts.length === products.length ? "Chọn Tất Cả" : "Bỏ chọn Tất Cả"}
+                                </Button>
+                            </TableCell>
                             <TableCell className="table-cell">Hình Ảnh</TableCell>
                             <TableCell className="table-cell">Tên Sản Phẩm</TableCell>
                             <TableCell className="table-cell">Giá</TableCell>
@@ -242,10 +265,11 @@ const ManageProducts = () => {
                                 <TableCell>{product.price} VNĐ</TableCell>
                                 <TableCell>{product.description}</TableCell>
                                 <TableCell>
-                                    <Button
+                                <Button
                                         onClick={() => handleEditProduct(product)}
                                         variant="contained"
                                         color="secondary"
+                                        startIcon={<Edit />} // Add edit icon
                                         sx={{
                                             mr: 1,
                                             '&:hover': {
@@ -254,15 +278,16 @@ const ManageProducts = () => {
                                             }
                                         }}
                                     >
-                                        Sửa
+                                        Cập nhật
                                     </Button>
                                     <Button
                                         onClick={() => handleConfirmDeleteProduct(product._id)}
                                         variant="contained"
                                         color="error"
+                                        startIcon={<Delete />} // Add delete icon
                                         sx={{
                                             '&:hover': {
-                                                backgroundColor: 'green',
+                                                backgroundColor: 'darkred',
                                                 color: 'white'
                                             }
                                         }}
@@ -277,7 +302,8 @@ const ManageProducts = () => {
             </TableContainer>
 
             <Dialog open={openDialog} onClose={handleCloseDialog}>
-                <DialogTitle>{editingProduct ? 'Cập Nhật Sản Phẩm' : 'Thêm Sản Phẩm'}</DialogTitle>
+                <DialogTitle style={{ textAlign: 'center' }}>
+                {editingProduct ? 'Cập Nhật Sản Phẩm' : 'Thêm Sản Phẩm'}</DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus

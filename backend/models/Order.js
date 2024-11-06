@@ -1,10 +1,11 @@
 // models/Order.js
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const orderSchema = new mongoose.Schema({
+const orderSchema = new Schema({
     items: [
         {
-            productId: { type: String, required: true },
+            productId: { type: Schema.Types.ObjectId, ref: 'Product', required: true }, // Tham chiếu đến mô hình Product
             quantity: { type: Number, required: true },
         },
     ],
