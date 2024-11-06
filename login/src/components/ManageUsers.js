@@ -241,7 +241,6 @@ const ManageUsers = () => {
             >
                 Xóa Người Dùng Đã Chọn
             </Button>
-
             <TableContainer component={Paper} className="table-container">
                 <Table sx={{ minWidth: 650 }} aria-label="user table">
                     <TableHead>
@@ -289,7 +288,6 @@ const ManageUsers = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-
             <Dialog 
                 open={dialogOpen} 
                 onClose={handleCloseDialog} 

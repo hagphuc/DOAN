@@ -8,7 +8,6 @@ import axios from 'axios';
 
 const Cart = () => {
     const { cartItems, removeFromCart, updateQuantity } = useCart();
-    const [deletingId, setDeletingId] = useState(null);
     const [isOrdering, setIsOrdering] = useState(false);
     const [orderModalOpen, setOrderModalOpen] = useState(false);
     const [orderInfo, setOrderInfo] = useState({ name: '', phone: '', email: '', address: '' });
@@ -84,8 +83,6 @@ const Cart = () => {
                 setOrderStatus({ success: true, message: 'Đặt hàng thành công!' });
                 setOrderInfo({ name: '', phone: '', email: '', address: '' });
                 setSelectedProducts([]); // Reset selected products after successful order
-
-                // Close the modal immediately after a successful order
                 setOrderModalOpen(false);
     
                 setTimeout(() => {
@@ -110,16 +107,6 @@ const Cart = () => {
         }
     };
 
-    const handleRemoveSelectedProducts = () => {
-        selectedProducts.forEach(productName => {
-            const itemToRemove = cartItems.find(item => item.name === productName);
-            if (itemToRemove) {
-                removeFromCart(itemToRemove._id);
-            }
-        });
-        setSelectedProducts([]); // Clear selection after removal
-    };
-    
     return (
         <div>
             <Header />
@@ -145,8 +132,6 @@ const Cart = () => {
                                     <td>
                                         <input 
                                             type="checkbox" 
-                                            id={`select-${item._id}`} 
-                                            value={item.name} 
                                             checked={selectedProducts.includes(item.name)}
                                             onChange={(e) => handleProductSelectionChange(e, item.name)}
                                         />
@@ -266,7 +251,6 @@ const Cart = () => {
                             </div>
                         </div>
                     )}
-
                     {orderStatus.message && (
                         <div className={`order-status-popup ${orderStatus.success ? 'success' : 'error'}`}>
                             {orderStatus.message}
@@ -277,5 +261,4 @@ const Cart = () => {
         </div>
     );
 };
-
 export default Cart;
