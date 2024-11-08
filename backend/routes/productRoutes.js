@@ -29,7 +29,7 @@ const path = require('path');
 // Route lấy danh sách sản phẩm - Yêu cầu người dùng đăng nhập
 router.get('/', authUser, async (req, res) => {
     try {
-        const products = await Product.find();
+        const products = await Product.find().populate('category'); // Sử dụng populate để lấy thông tin category
         res.json(products);
     } catch (err) {
         res.status(500).json({ msg: 'Lỗi máy chủ' });
@@ -60,7 +60,7 @@ router.get('/', authUser, async (req, res) => {
 // Route lấy sản phẩm theo ID - Yêu cầu người dùng đăng nhập
 router.get('/:id', authUser, async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id);
+        const product = await Product.findById(req.params.id).populate('category'); // Sử dụng populate để lấy thông tin category
         if (!product) {
             return res.status(404).json({ msg: 'Sản phẩm không tìm thấy' });
         }
@@ -69,6 +69,7 @@ router.get('/:id', authUser, async (req, res) => {
         res.status(500).json({ msg: 'Lỗi máy chủ' });
     }
 });
+
 
 /**
  * @swagger
@@ -89,6 +90,9 @@ router.get('/:id', authUser, async (req, res) => {
  *                 type: string
  *               price:
  *                 type: number
+ *               category:
+ *                 type: string
+ *                 description: ID của category
  *               image:
  *                 type: string
  *                 format: binary
@@ -100,14 +104,15 @@ router.get('/:id', authUser, async (req, res) => {
  */
 router.post('/', authAdmin, upload.single('image'), async (req, res) => {
     try {
-        const { name, description, price } = req.body;
+        const { name, description, price, category } = req.body;
         const imageUrl = req.file ? `uploads/${req.file.filename}` : ''; // Sử dụng đường dẫn tương đối
 
         const newProduct = new Product({
             name,
             description,
             price,
-            imageUrl // Lưu đường dẫn hình ảnh vào cơ sở dữ liệu
+            category, // Lưu category
+            imageUrl, // Lưu đường dẫn hình ảnh vào cơ sở dữ liệu
         });
 
         const product = await newProduct.save();
@@ -116,6 +121,7 @@ router.post('/', authAdmin, upload.single('image'), async (req, res) => {
         res.status(500).json({ msg: 'Lỗi máy chủ', error: err.message });
     }
 });
+
 
 /**
  * @swagger
@@ -143,6 +149,9 @@ router.post('/', authAdmin, upload.single('image'), async (req, res) => {
  *                 type: string
  *               price:
  *                 type: number
+ *               category:
+ *                 type: string
+ *                 description: ID của category
  *               image:
  *                 type: string
  *                 format: binary
@@ -156,13 +165,14 @@ router.post('/', authAdmin, upload.single('image'), async (req, res) => {
  */
 router.put('/:id', authAdmin, upload.single('image'), async (req, res) => {
     try {
-        const { name, description, price } = req.body;
+        const { name, description, price, category } = req.body;
         const imageUrl = req.file ? req.file.path : undefined; // Lấy đường dẫn hình ảnh (có thể là undefined nếu không có hình ảnh)
 
         const updateData = {
             name,
             description,
             price,
+            category, // Thêm category vào bản cập nhật
             ...(imageUrl && { imageUrl }) // Chỉ cập nhật imageUrl nếu nó có giá trị
         };
 
@@ -175,6 +185,7 @@ router.put('/:id', authAdmin, upload.single('image'), async (req, res) => {
         res.status(500).json({ msg: 'Lỗi máy chủ', error: err.message });
     }
 });
+
 
 /**
  * @swagger

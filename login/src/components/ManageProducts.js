@@ -22,6 +22,10 @@ import {
 } from '@mui/material';
 import './ManageProducts.css';
 import { Add, Edit, Delete } from '@mui/icons-material'; // Import the icons
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'; // Icon mũi tên đi lên từ MUI
+import { Fab } from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+
 
 const ManageProducts = () => {
     const [products, setProducts] = useState([]);
@@ -31,10 +35,12 @@ const ManageProducts = () => {
     const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
     const [openConfirmDeleteAllDialog, setOpenConfirmDeleteAllDialog] = useState(false); // Dialog xác nhận xóa tất cả
     const [editingProduct, setEditingProduct] = useState(null);
-    const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', image: null });
+    const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', image: null, category: '' // Thêm trường category
+    });
     const [productIdToDelete, setProductIdToDelete] = useState(null);
     const [notification, setNotification] = useState({ open: false, message: '', severity: 'success' });
-    
+    const [showScrollTop, setShowScrollTop] = useState(false);
+
     useEffect(() => {
         fetchProducts();
     }, []);
@@ -60,10 +66,11 @@ const ManageProducts = () => {
             formData.append('name', newProduct.name);
             formData.append('price', newProduct.price);
             formData.append('description', newProduct.description);
+            formData.append('category', newProduct.category); // Thêm danh mục vào FormData
             if (newProduct.image) {
                 formData.append('image', newProduct.image);
             }
-
+    
             if (editingProduct) {
                 await axios.put(`http://localhost:5000/api/products/${editingProduct._id}`, formData, {
                     headers: {
@@ -87,12 +94,19 @@ const ManageProducts = () => {
             setNotification({ open: true, message: 'Lỗi khi lưu sản phẩm!', severity: 'error' });
         }
     };
-
+    
     const handleEditProduct = (product) => {
         setEditingProduct(product);
-        setNewProduct({ name: product.name, price: product.price, description: product.description, image: null });
+        setNewProduct({
+            name: product.name,
+            price: product.price,
+            description: product.description,
+            image: null,
+            category: product.category // Thêm category khi chỉnh sửa
+        });
         setOpenDialog(true);
     };
+    
 
     const handleConfirmDeleteProduct = (id) => {
         setProductIdToDelete(id);
@@ -181,10 +195,65 @@ const ManageProducts = () => {
             setSelectedProducts(products.map(product => product._id));
         }
     };
-    
+    // Hàm kiểm tra vị trí cuộn và hiển thị nút lên đầu trang
+    useEffect(() => {
+        const handleScroll = () => {
+            setShowScrollTop(window.scrollY > 300); // Hiển thị nút khi cuộn xuống hơn 300px
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    // Hàm cuộn lên đầu trang
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const [categories, setCategories] = useState([]);
+
+    const fetchCategories = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get('http://localhost:5000/api/categories', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setCategories(response.data);
+        } catch (err) {
+            setError('Lỗi khi lấy danh sách danh mục.');
+        }
+    };
+
+    // Gọi hàm fetchCategories khi component được render lần đầu
+    useEffect(() => {
+        fetchCategories();
+    }, []);
+
 
     return (
         <div className="manage-products">
+            {/* Nút mũi tên đi lên */}
+            {showScrollTop && (
+                <Fab
+                    color="default"  // Giữ màu icon mặc định hoặc có thể dùng "primary" nếu muốn màu khác
+                    onClick={scrollToTop}
+                    className="scroll-to-top"
+                    aria-label="scroll to top"
+                    sx={{
+                        position: 'fixed',
+                        bottom: '20px',
+                        right: '20px',
+                        backgroundColor: 'white', // Màu nền trắng
+                        color: 'black', // Màu icon đen (có thể thay đổi)
+                        '&:hover': {
+                            backgroundColor: '#f0f0f0' // Màu nền khi hover
+                        }
+                    }}
+                >
+                    <ArrowUpwardIcon />
+                </Fab>
+            )}
             <HeaderAdmin />
             <Typography variant="h4" gutterBottom className="title" style={{ marginTop: '80px' }}>
                 Quản Lý Sản Phẩm
@@ -234,13 +303,14 @@ const ManageProducts = () => {
                                     color={selectedProducts.length === products.length ? "primary" : "default"}
                                     onClick={handleSelectAllProducts}
                                 >
-                                    {selectedProducts.length === products.length ? "Chọn Tất Cả" : "Bỏ chọn Tất Cả"}
+                                    {selectedProducts.length === products.length ? "Bỏ chọn Tất Cả" : "Chọn Tất Cả"}
                                 </Button>
                             </TableCell>
                             <TableCell className="table-cell">Hình Ảnh</TableCell>
                             <TableCell className="table-cell">Tên Sản Phẩm</TableCell>
                             <TableCell className="table-cell">Giá</TableCell>
                             <TableCell className="table-cell">Mô Tả</TableCell>
+                            <TableCell className="table-cell">Danh Mục</TableCell>
                             <TableCell className="table-cell">Hành Động</TableCell>
                         </TableRow>
                     </TableHead>
@@ -264,8 +334,9 @@ const ManageProducts = () => {
                                 <TableCell>{product.name}</TableCell>
                                 <TableCell>{product.price} VNĐ</TableCell>
                                 <TableCell>{product.description}</TableCell>
+                                <TableCell>{product.category?.name || 'N/A'}</TableCell>
                                 <TableCell>
-                                <Button
+                                    <Button
                                         onClick={() => handleEditProduct(product)}
                                         variant="contained"
                                         color="secondary"
@@ -303,44 +374,62 @@ const ManageProducts = () => {
                 <DialogTitle style={{ textAlign: 'center' }}>
                 {editingProduct ? 'Cập Nhật Sản Phẩm' : 'Thêm Sản Phẩm'}</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Tên sản phẩm"
-                        fullWidth
-                        value={newProduct.name}
-                        onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                    />
-                    <TextField
-                        margin="dense"
-                        label="Giá sản phẩm"
-                        type="number"
-                        fullWidth
-                        value={newProduct.price}
-                        onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-                    />
-                    <TextField
-                        margin="dense"
-                        label="Mô tả sản phẩm"
-                        fullWidth
-                        multiline
-                        rows={3}
-                        value={newProduct.description}
-                        onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                    />
-                    <input
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        id="upload-image"
-                        type="file"
-                        onChange={handleImageChange}
-                    />
-                    <label htmlFor="upload-image">
-                        <Button variant="contained" component="span" color="primary">
-                            {newProduct.image ? newProduct.image.name : 'Chọn Hình Ảnh'}
-                        </Button>
-                    </label>
-                </DialogContent>
+    <TextField
+        autoFocus
+        margin="dense"
+        label="Tên sản phẩm"
+        fullWidth
+        value={newProduct.name}
+        onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+    />
+    <TextField
+        margin="dense"
+        label="Giá sản phẩm"
+        type="number"
+        fullWidth
+        value={newProduct.price}
+        onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+    />
+    <TextField
+        margin="dense"
+        label="Mô tả sản phẩm"
+        fullWidth
+        multiline
+        rows={3}
+        value={newProduct.description}
+        onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+    />
+    
+    {/* FormControl để tạo nhãn và kiểm soát Select */}
+    <FormControl fullWidth margin="dense">
+        <InputLabel>Danh mục sản phẩm</InputLabel>
+        <Select
+            value={newProduct.category || ''}
+            onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+            label="Danh mục sản phẩm"
+        >
+            {categories.map((category) => (
+                <MenuItem key={category._id} value={category._id}>
+                    {category.name}
+                </MenuItem>
+            ))}
+        </Select>
+    </FormControl>
+    
+    <input
+        accept="image/*"
+        style={{ display: 'none' }}
+        id="upload-image"
+        type="file"
+        onChange={handleImageChange}
+    />
+    <label htmlFor="upload-image">
+        <Button variant="contained" component="span" color="primary">
+            {newProduct.image ? newProduct.image.name : 'Chọn Hình Ảnh'}
+        </Button>
+    </label>
+</DialogContent>
+
                 <DialogActions>
                     <Button
                         onClick={handleCloseDialog}

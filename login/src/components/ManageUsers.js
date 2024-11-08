@@ -26,6 +26,8 @@ import HeaderAdmin from './HeaderAdmin';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'; // Icon mũi tên đi lên từ MUI
+import { Fab } from '@mui/material'; // Nút tròn từ MUI
 
 const ManageUsers = () => {
     const [users, setUsers] = useState([]);
@@ -41,6 +43,7 @@ const ManageUsers = () => {
     const [hoverButton, setHoverButton] = useState(null);
     const [selectedUsers, setSelectedUsers] = useState([]); // State cho người dùng đã chọn
     const [confirmDeleteSelectedDialogOpen, setConfirmDeleteSelectedDialogOpen] = useState(false); // For multi-user delete confirmation
+    const [showScrollTop, setShowScrollTop] = useState(false);
 
     const fetchUsers = useCallback(async () => {
         setLoading(true);
@@ -210,9 +213,44 @@ const ManageUsers = () => {
     const handleCloseDeleteSelectedDialog = () => {
         setConfirmDeleteSelectedDialogOpen(false);
     };
+    // Hàm kiểm tra vị trí cuộn và hiển thị nút lên đầu trang
+    useEffect(() => {
+        const handleScroll = () => {
+            setShowScrollTop(window.scrollY > 300); // Hiển thị nút khi cuộn xuống hơn 300px
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    // Hàm cuộn lên đầu trang
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
 
     return (
         <div className="manage-users">
+            {/* Nút mũi tên đi lên */}
+            {showScrollTop && (
+                <Fab
+                    color="default"  // Giữ màu icon mặc định hoặc có thể dùng "primary" nếu muốn màu khác
+                    onClick={scrollToTop}
+                    className="scroll-to-top"
+                    aria-label="scroll to top"
+                    sx={{
+                        position: 'fixed',
+                        bottom: '20px',
+                        right: '20px',
+                        backgroundColor: 'white', // Màu nền trắng
+                        color: 'black', // Màu icon đen (có thể thay đổi)
+                        '&:hover': {
+                            backgroundColor: '#f0f0f0' // Màu nền khi hover
+                        }
+                    }}
+                >
+                    <ArrowUpwardIcon />
+                </Fab>
+            )}
             <HeaderAdmin />
             <Typography variant="h4" gutterBottom className="title" style={{ marginTop: '80px' }}>
                 Quản Lý Người Dùng

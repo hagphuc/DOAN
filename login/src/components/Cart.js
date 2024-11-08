@@ -5,6 +5,8 @@ import { useCart } from './CartContext';
 import Header from './Header';
 import './Cart.css';
 import axios from 'axios';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'; // Icon mũi tên đi lên từ MUI
+import { Fab } from '@mui/material'; // Nút tròn từ MUI
 
 const Cart = () => {
     const { cartItems, removeFromCart, updateQuantity } = useCart();
@@ -16,7 +18,7 @@ const Cart = () => {
     const [phoneError, setPhoneError] = useState('');
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [deleteStatus, setDeleteStatus] = useState({ success: null, message: '' }); // New state for delete status
-
+    const [showScrollTop, setShowScrollTop] = useState(false);
     const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] = useState(false);
     const [openConfirmDeleteAllDialog, setOpenConfirmDeleteAllDialog] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
@@ -153,8 +155,43 @@ const Cart = () => {
         }
     };
 
+    // Hàm kiểm tra vị trí cuộn và hiển thị nút lên đầu trang
+    useEffect(() => {
+        const handleScroll = () => {
+            setShowScrollTop(window.scrollY > 300); // Hiển thị nút khi cuộn xuống hơn 300px
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    // Hàm cuộn lên đầu trang
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     return (
         <div>
+            {/* Nút mũi tên đi lên */}
+            {showScrollTop && (
+                <Fab
+                    color="default"  // Giữ màu icon mặc định hoặc có thể dùng "primary" nếu muốn màu khác
+                    onClick={scrollToTop}
+                    className="scroll-to-top"
+                    aria-label="scroll to top"
+                    sx={{
+                        position: 'fixed',
+                        bottom: '20px',
+                        right: '20px',
+                        backgroundColor: 'white', // Màu nền trắng
+                        color: 'black', // Màu icon đen (có thể thay đổi)
+                        '&:hover': {
+                            backgroundColor: '#f0f0f0' // Màu nền khi hover
+                        }
+                    }}
+                >
+                    <ArrowUpwardIcon />
+                </Fab>
+            )}
             <Header />
             <h1>Giỏ Hàng</h1>
             {cartItems.length === 0 ? (

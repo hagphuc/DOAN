@@ -22,6 +22,8 @@ import {
 import { Visibility, Delete } from '@mui/icons-material';
 import HeaderAdmin from './HeaderAdmin'; // Assuming you have a header component for admin
 import './ManageOrders.css';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'; // Icon mũi tên đi lên từ MUI
+import { Fab } from '@mui/material'; // Nút tròn từ MUI
 
 const ManageOrders = () => {
     const [orders, setOrders] = useState([]);
@@ -32,6 +34,7 @@ const ManageOrders = () => {
     const [orderToDelete, setOrderToDelete] = useState(null); // Trạng thái chứa ID của đơn hàng cần xóa
     const [openConfirmDeleteAllDialog, setOpenConfirmDeleteAllDialog] = useState(false); // Dialog xác nhận xóa tất cả
     const [openDialog, setOpenDialog] = useState(false); // Open order details dialog
+    const [showScrollTop, setShowScrollTop] = useState(false);
 
     useEffect(() => {
         fetchOrders();
@@ -134,9 +137,43 @@ const ManageOrders = () => {
             setSelectedOrders(orders.map(order => order._id));
         }
     };
+    // Hàm kiểm tra vị trí cuộn và hiển thị nút lên đầu trang
+    useEffect(() => {
+        const handleScroll = () => {
+            setShowScrollTop(window.scrollY > 300); // Hiển thị nút khi cuộn xuống hơn 300px
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    // Hàm cuộn lên đầu trang
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     return (
         <div className="manage-orders">
+            {/* Nút mũi tên đi lên */}
+            {showScrollTop && (
+                <Fab
+                    color="default"  // Giữ màu icon mặc định hoặc có thể dùng "primary" nếu muốn màu khác
+                    onClick={scrollToTop}
+                    className="scroll-to-top"
+                    aria-label="scroll to top"
+                    sx={{
+                        position: 'fixed',
+                        bottom: '20px',
+                        right: '20px',
+                        backgroundColor: 'white', // Màu nền trắng
+                        color: 'black', // Màu icon đen (có thể thay đổi)
+                        '&:hover': {
+                            backgroundColor: '#f0f0f0' // Màu nền khi hover
+                        }
+                    }}
+                >
+                    <ArrowUpwardIcon />
+                </Fab>
+            )}
             <HeaderAdmin />
             <Typography variant="h4" gutterBottom className="title" style={{ marginTop: '80px' }} >
                 Quản Lý Đơn Hàng
