@@ -278,7 +278,6 @@ const ManageProducts = () => {
                                             }
                                         }}
                                     >
-                                        Cập nhật
                                     </Button>
                                     <Button
                                         onClick={() => handleConfirmDeleteProduct(product._id)}
@@ -292,7 +291,6 @@ const ManageProducts = () => {
                                             }
                                         }}
                                     >
-                                        Xóa
                                     </Button>
                                 </TableCell>
                             </TableRow>
