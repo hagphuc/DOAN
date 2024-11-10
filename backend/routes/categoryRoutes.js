@@ -10,7 +10,6 @@ const authAdmin = require('../middleware/authAdmin');
  *   name: Categories
  *   description: API for managing categories
  */
-
 /**
  * @swagger
  * /api/categories:

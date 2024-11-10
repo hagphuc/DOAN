@@ -266,7 +266,6 @@ const ManageUsers = () => {
                     {success || error}
                 </MuiAlert>
             </Snackbar>
-
             <Button
                 variant="contained"
                 color="primary"
