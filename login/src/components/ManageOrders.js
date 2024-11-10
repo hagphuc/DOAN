@@ -35,7 +35,9 @@ const ManageOrders = () => {
     const [openConfirmDeleteAllDialog, setOpenConfirmDeleteAllDialog] = useState(false); // Dialog xác nhận xóa tất cả
     const [openDialog, setOpenDialog] = useState(false); // Open order details dialog
     const [showScrollTop, setShowScrollTop] = useState(false);
-
+    const [searchTerm, setSearchTerm] = useState('');  // Trạng thái lưu từ khóa tìm kiếm
+    const [filteredOrders, setFilteredOrders] = useState(orders);  // Trạng thái lưu các đơn hàng đã lọc
+    
     useEffect(() => {
         fetchOrders();
     }, []);
@@ -47,6 +49,7 @@ const ManageOrders = () => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setOrders(response.data);
+            setFilteredOrders(response.data); // Set filtered orders with all orders initially
         } catch (error) {
             console.error('Error fetching orders:', error);
         }
@@ -151,6 +154,21 @@ const ManageOrders = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    const handleSearch = (event) => {
+        const searchValue = event.target.value.toLowerCase();
+        setSearchTerm(searchValue);
+    
+        if (searchValue) {
+            const filtered = orders.filter(order => 
+                order._id.toLowerCase().includes(searchValue) ||  // Tìm kiếm theo Mã Đơn Hàng
+                (order.customerInfo?.name?.toLowerCase() || "").includes(searchValue) // Tìm kiếm theo tên khách hàng
+            );
+            setFilteredOrders(filtered);
+        } else {
+            setFilteredOrders(orders);  // Nếu không có từ khóa tìm kiếm, hiển thị tất cả đơn hàng
+        }
+    };    
+    
     return (
         <div className="manage-orders">
             {/* Nút mũi tên đi lên */}
@@ -178,7 +196,21 @@ const ManageOrders = () => {
             <Typography variant="h4" gutterBottom className="title" style={{ marginTop: '80px' }} >
                 Quản Lý Đơn Hàng
             </Typography>
-
+            <div className="search-container" style={{ marginBottom: '20px' }}>
+                <input
+                    type="text"
+                    placeholder="Tìm kiếm đơn hàng..."
+                    value={searchTerm}
+                    onChange={handleSearch}
+                    style={{
+                        padding: '10px',
+                        width: '100%',
+                        fontSize: '16px',
+                        borderRadius: '4px',
+                        border: '1px solid #ccc',
+                    }}
+                />
+            </div>
             {/* Nút Xóa Đơn Hàng Đã Chọn */}
             {selectedOrders.length > 0 && (
                 <Button 
@@ -213,28 +245,36 @@ const ManageOrders = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {orders.map((order) => (
-                            <TableRow key={order._id}>
-                                <TableCell>
-                                    <Checkbox
-                                        checked={selectedOrders.includes(order._id)}
-                                        onChange={() => handleSelectOrder(order._id)}
-                                    />
-                                </TableCell>
-                                <TableCell>{order._id}</TableCell>
-                                <TableCell>{order.customerInfo?.name}</TableCell>
-                                <TableCell>{order.items.length}</TableCell>
-                                <TableCell>{order.totalAmount}</TableCell>
-                                <TableCell>
-                                    <IconButton color="primary" onClick={() => handleViewOrder(order)}>
-                                        <Visibility />
-                                    </IconButton>
-                                    <IconButton color="error" onClick={() => handleDeleteOrder(order._id)}>
-                                        <Delete />
-                                    </IconButton>
+                        {filteredOrders.length > 0 ? (
+                            filteredOrders.map((order) => (
+                                <TableRow key={order._id}>
+                                    <TableCell>
+                                        <Checkbox
+                                            checked={selectedOrders.includes(order._id)}
+                                            onChange={() => handleSelectOrder(order._id)}
+                                        />
+                                    </TableCell>
+                                    <TableCell>{order._id}</TableCell>
+                                    <TableCell>{order.customerInfo?.name}</TableCell>
+                                    <TableCell>{order.items.length}</TableCell>
+                                    <TableCell>{order.totalAmount}</TableCell>
+                                    <TableCell>
+                                        <IconButton color="primary" onClick={() => handleViewOrder(order)}>
+                                            <Visibility />
+                                        </IconButton>
+                                        <IconButton color="error" onClick={() => handleDeleteOrder(order._id)}>
+                                            <Delete />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={6} align="center">
+                                    <Typography variant="h6" color="textSecondary">Không tìm thấy đơn hàng.</Typography>
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        )}
                     </TableBody>
                 </Table>
             </TableContainer>

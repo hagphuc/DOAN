@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+    import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import HeaderAdmin from './HeaderAdmin';
 import Typography from '@mui/material/Typography';
@@ -40,7 +40,9 @@ const ManageProducts = () => {
     const [productIdToDelete, setProductIdToDelete] = useState(null);
     const [notification, setNotification] = useState({ open: false, message: '', severity: 'success' });
     const [showScrollTop, setShowScrollTop] = useState(false);
-
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    
     useEffect(() => {
         fetchProducts();
     }, []);
@@ -229,8 +231,21 @@ const ManageProducts = () => {
     useEffect(() => {
         fetchCategories();
     }, []);
-
-
+    const handleSearch = (event) => {
+        const searchValue = event.target.value.toLowerCase();
+        setSearchTerm(searchValue);
+    
+        if (searchValue) {
+            const filtered = products.filter(product => 
+                product.name.toLowerCase().includes(searchValue) ||
+                product.description.toLowerCase().includes(searchValue) ||
+                (product.category?.name || "").toLowerCase().includes(searchValue)  // Thêm điều kiện tìm kiếm danh mục
+            );
+            setFilteredProducts(filtered);
+        } else {
+            setFilteredProducts(products);
+        }
+    };    
     return (
         <div className="manage-products">
             {/* Nút mũi tên đi lên */}
@@ -259,6 +274,15 @@ const ManageProducts = () => {
                 Quản Lý Sản Phẩm
             </Typography>
             {error && <p>{error}</p>}
+            <TextField
+                label="Tìm kiếm sản phẩm"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={searchTerm}
+                onChange={handleSearch}
+            />
+
             <Button
                 variant="contained"
                 color="primary"
@@ -315,58 +339,65 @@ const ManageProducts = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {products.map((product) => (
-                            <TableRow key={product._id}>
-                                <TableCell>
-                                    <Checkbox
-                                        checked={selectedProducts.includes(product._id)}
-                                        onChange={() => handleSelectProduct(product._id)}
-                                    />
-                                </TableCell>
-                                <TableCell>
-                                    <img
-                                        src={`http://localhost:5000/${product.imageUrl}`}
-                                        alt={product.name}
-                                        className="product-image"
-                                        style={{ width: '200px', height: '200px' }}
-                                    />
-                                </TableCell>
-                                <TableCell>{product.name}</TableCell>
-                                <TableCell>{product.price} VNĐ</TableCell>
-                                <TableCell>{product.description}</TableCell>
-                                <TableCell>{product.category?.name || 'N/A'}</TableCell>
-                                <TableCell>
-                                    <Button
-                                        onClick={() => handleEditProduct(product)}
-                                        variant="contained"
-                                        color="secondary"
-                                        startIcon={<Edit />} // Add edit icon
-                                        sx={{
-                                            mr: 1,
-                                            '&:hover': {
-                                                backgroundColor: 'green',
-                                                color: 'white'
-                                            }
-                                        }}
-                                    >
-                                    </Button>
-                                    <Button
-                                        onClick={() => handleConfirmDeleteProduct(product._id)}
-                                        variant="contained"
-                                        color="error"
-                                        startIcon={<Delete />} // Add delete icon
-                                        sx={{
-                                            '&:hover': {
-                                                backgroundColor: 'darkred',
-                                                color: 'white'
-                                            }
-                                        }}
-                                    >
-                                    </Button>
+                        {(searchTerm ? filteredProducts : products).length > 0 ? (
+                            (searchTerm ? filteredProducts : products).map((product) => (
+                                <TableRow key={product._id}>
+                                    <TableCell>
+                                        <Checkbox
+                                            checked={selectedProducts.includes(product._id)}
+                                            onChange={() => handleSelectProduct(product._id)}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <img
+                                            src={`http://localhost:5000/${product.imageUrl}`}
+                                            alt={product.name}
+                                            className="product-image"
+                                            style={{ width: '200px', height: '200px' }}
+                                        />
+                                    </TableCell>
+                                    <TableCell>{product.name}</TableCell>
+                                    <TableCell>{product.price} VNĐ</TableCell>
+                                    <TableCell>{product.description}</TableCell>
+                                    <TableCell>{product.category?.name || 'N/A'}</TableCell>
+                                    <TableCell>
+                                        <Button
+                                            onClick={() => handleEditProduct(product)}
+                                            variant="contained"
+                                            color="secondary"
+                                            startIcon={<Edit />}
+                                            sx={{
+                                                mr: 1,
+                                                '&:hover': {
+                                                    backgroundColor: 'green',
+                                                    color: 'white'
+                                                }
+                                            }}
+                                        />
+                                        <Button
+                                            onClick={() => handleConfirmDeleteProduct(product._id)}
+                                            variant="contained"
+                                            color="error"
+                                            startIcon={<Delete />}
+                                            sx={{
+                                                '&:hover': {
+                                                    backgroundColor: 'darkred',
+                                                    color: 'white'
+                                                }
+                                            }}
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={7} align="center">
+                                    No data
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        )}
                     </TableBody>
+
                 </Table>
             </TableContainer>
 
@@ -374,61 +405,61 @@ const ManageProducts = () => {
                 <DialogTitle style={{ textAlign: 'center' }}>
                 {editingProduct ? 'Cập Nhật Sản Phẩm' : 'Thêm Sản Phẩm'}</DialogTitle>
                 <DialogContent>
-    <TextField
-        autoFocus
-        margin="dense"
-        label="Tên sản phẩm"
-        fullWidth
-        value={newProduct.name}
-        onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-    />
-    <TextField
-        margin="dense"
-        label="Giá sản phẩm"
-        type="number"
-        fullWidth
-        value={newProduct.price}
-        onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-    />
-    <TextField
-        margin="dense"
-        label="Mô tả sản phẩm"
-        fullWidth
-        multiline
-        rows={3}
-        value={newProduct.description}
-        onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-    />
-    
-    {/* FormControl để tạo nhãn và kiểm soát Select */}
-    <FormControl fullWidth margin="dense">
-        <InputLabel>Danh mục sản phẩm</InputLabel>
-        <Select
-            value={newProduct.category || ''}
-            onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-            label="Danh mục sản phẩm"
-        >
-            {categories.map((category) => (
-                <MenuItem key={category._id} value={category._id}>
-                    {category.name}
-                </MenuItem>
-            ))}
-        </Select>
-    </FormControl>
-    
-    <input
-        accept="image/*"
-        style={{ display: 'none' }}
-        id="upload-image"
-        type="file"
-        onChange={handleImageChange}
-    />
-    <label htmlFor="upload-image">
-        <Button variant="contained" component="span" color="primary">
-            {newProduct.image ? newProduct.image.name : 'Chọn Hình Ảnh'}
-        </Button>
-    </label>
-</DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="Tên sản phẩm"
+                        fullWidth
+                        value={newProduct.name}
+                        onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                    />
+                    <TextField
+                        margin="dense"
+                        label="Giá sản phẩm"
+                        type="number"
+                        fullWidth
+                        value={newProduct.price}
+                        onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                    />
+                    <TextField
+                        margin="dense"
+                        label="Mô tả sản phẩm"
+                        fullWidth
+                        multiline
+                        rows={3}
+                        value={newProduct.description}
+                        onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                    />
+                    
+                    {/* FormControl để tạo nhãn và kiểm soát Select */}
+                    <FormControl fullWidth margin="dense">
+                        <InputLabel>Danh mục sản phẩm</InputLabel>
+                        <Select
+                            value={newProduct.category || ''}
+                            onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                            label="Danh mục sản phẩm"
+                        >
+                            {categories.map((category) => (
+                                <MenuItem key={category._id} value={category._id}>
+                                    {category.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    
+                    <input
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        id="upload-image"
+                        type="file"
+                        onChange={handleImageChange}
+                    />
+                    <label htmlFor="upload-image">
+                        <Button variant="contained" component="span" color="primary">
+                            {newProduct.image ? newProduct.image.name : 'Chọn Hình Ảnh'}
+                        </Button>
+                    </label>
+                </DialogContent>
 
                 <DialogActions>
                     <Button

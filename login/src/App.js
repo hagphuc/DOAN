@@ -13,7 +13,7 @@ import Cart from './components/Cart';
 import Footer from './components/Footer';
 import { CartProvider } from './components/CartContext';
 import './App.css';
-
+import ManageCategories from './components/ManageCategories';
 // Function to check if the user is authenticated
 const isAuthenticated = () => !!localStorage.getItem('token');
 
@@ -52,6 +52,7 @@ function App() {
               <Route path="/admin/manage-users" element={<AdminRoute><ManageUsers /></AdminRoute>} />
               <Route path="/admin/manage-products" element={<AdminRoute><ManageProducts /></AdminRoute>} />
               <Route path="/admin/manage-orders" element={<AdminRoute><ManageOrders /></AdminRoute>} /> {/* New Manage Orders route */}
+              <Route path="/admin/manage-categories" element={<ManageCategories />} />
 
               {/* Product list and product detail routes */}
               <Route path="/products" element={<ProductList />} />

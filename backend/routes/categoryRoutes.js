@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Category = require('../models/Category');
 const authAdmin = require('../middleware/authAdmin');
+const Product = require('../models/Product');
 
 /**
  * @swagger
@@ -10,24 +11,34 @@ const authAdmin = require('../middleware/authAdmin');
  *   name: Categories
  *   description: API for managing categories
  */
+
 /**
  * @swagger
  * /api/categories:
  *   get:
- *     summary: Lấy danh sách thư mục
+ *     summary: Lấy danh sách thư mục và các sản phẩm trong từng thư mục
  *     tags: [Categories]
  *     responses:
  *       200:
- *         description: A list of categories
+ *         description: A list of categories with their products
  *       500:
  *         description: Server error
  */
 router.get('/', async (req, res) => {
     try {
         const categories = await Category.find();
-        res.json(categories);
+
+        const categoriesWithProducts = await Promise.all(categories.map(async (category) => {
+            const products = await Product.find({ category: category._id }); // Lấy sản phẩm theo ID danh mục
+            return {
+                ...category._doc,
+                products
+            };
+        }));
+
+        res.json(categoriesWithProducts);
     } catch (err) {
-        res.status(500).json({ msg: 'Lỗi máy chủ' });
+        res.status(500).json({ msg: 'Lỗi máy chủ', error: err.message });
     }
 });
 
@@ -179,5 +190,6 @@ router.delete('/:id', authAdmin, async (req, res) => {
         res.status(500).json({ msg: 'Lỗi máy chủ', error: err.message });
     }
 });
+
 
 module.exports = router;

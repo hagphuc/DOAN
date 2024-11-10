@@ -9,6 +9,7 @@ const categorySchema = new mongoose.Schema({
     description: {
         type: String,
     },
+    products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }] // Thêm danh sách sản phẩm tham chiếu
 }, {
     timestamps: true,
 });

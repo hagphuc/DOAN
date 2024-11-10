@@ -44,6 +44,7 @@ const ManageUsers = () => {
     const [selectedUsers, setSelectedUsers] = useState([]); // State cho người dùng đã chọn
     const [confirmDeleteSelectedDialogOpen, setConfirmDeleteSelectedDialogOpen] = useState(false); // For multi-user delete confirmation
     const [showScrollTop, setShowScrollTop] = useState(false);
+    const [searchQuery, setSearchQuery] = useState(''); // Trạng thái cho từ khóa tìm kiếm
 
     const fetchUsers = useCallback(async () => {
         setLoading(true);
@@ -227,6 +228,18 @@ const ManageUsers = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    // Hàm lọc người dùng theo từ khóa tìm kiếm
+    const filteredUsers = users.filter(user => {
+        return (
+            user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user.role.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    });
+
+    const handleSearchChange = (event) => {
+        setSearchQuery(event.target.value);  // Cập nhật từ khóa tìm kiếm
+    };
 
     return (
         <div className="manage-users">
@@ -266,6 +279,17 @@ const ManageUsers = () => {
                     {success || error}
                 </MuiAlert>
             </Snackbar>
+            {/* Thêm ô nhập liệu tìm kiếm */}
+            <TextField
+                label="Tìm kiếm người dùng"
+                variant="outlined"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                fullWidth
+                style={{ marginBottom: '20px' }}
+
+            />
+
             <Button
                 variant="contained"
                 color="primary"
@@ -323,40 +347,48 @@ const ManageUsers = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {users.map((user) => (
-                            <TableRow key={user._id}>
-                                <TableCell padding="checkbox">
-                                    <Checkbox
-                                        checked={selectedUsers.includes(user._id)}
-                                        onChange={() => handleSelectUser(user._id)}
-                                    />
-                                </TableCell>
-                                <TableCell className="table-cell-body">{user.username}</TableCell>
-                                <TableCell className="table-cell-body">{user.email}</TableCell>
-                                <TableCell className="table-cell-body">{user.role}</TableCell>
-                                <TableCell className="table-cell-body">
-                                    <Button
-                                        variant="outlined"
-                                        color="primary"
-                                        onClick={() => handleEditUser(user)}
-                                        className="custom-button"
-                                        style={{ marginRight: '8px' }}
-                                        startIcon={<EditIcon />}
-                                    >
-                                        Cập nhật
-                                    </Button>
-                                    <Button
-                                        variant="outlined"
-                                        color="secondary"
-                                        onClick={() => handleDelete(user._id)}
-                                        className="custom-button"
-                                        startIcon={<DeleteIcon />}
-                                    >
-                                        Xóa
-                                    </Button>
+                        {filteredUsers.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={5} style={{ textAlign: 'center' }}>
+                                    No data
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            filteredUsers.map((user) => (
+                                <TableRow key={user._id}>
+                                    <TableCell padding="checkbox">
+                                        <Checkbox
+                                            checked={selectedUsers.includes(user._id)}
+                                            onChange={() => handleSelectUser(user._id)}
+                                        />
+                                    </TableCell>
+                                    <TableCell className="table-cell-body">{user.username}</TableCell>
+                                    <TableCell className="table-cell-body">{user.email}</TableCell>
+                                    <TableCell className="table-cell-body">{user.role}</TableCell>
+                                    <TableCell className="table-cell-body">
+                                        <Button
+                                            variant="outlined"
+                                            color="primary"
+                                            onClick={() => handleEditUser(user)}
+                                            className="custom-button"
+                                            style={{ marginRight: '8px' }}
+                                            startIcon={<EditIcon />}
+                                        >
+                                            Cập nhật
+                                        </Button>
+                                        <Button
+                                            variant="outlined"
+                                            color="secondary"
+                                            onClick={() => handleDelete(user._id)}
+                                            className="custom-button"
+                                            startIcon={<DeleteIcon />}
+                                        >
+                                            Xóa
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </TableContainer>
