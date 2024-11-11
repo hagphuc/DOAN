@@ -26,6 +26,7 @@ const path = require('path');
  *       500:
  *         description: Server error
  */
+// Route lấy danh sách sản phẩm - Yêu cầu người dùng đăng nhập
 router.get('/', authUser, async (req, res) => {
     try {
         const products = await Product.find().populate('category'); // Sử dụng populate để lấy thông tin category

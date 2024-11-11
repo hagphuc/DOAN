@@ -1,3 +1,4 @@
+// routes/categoryRoutes.js
 const express = require('express');
 const router = express.Router();
 const Category = require('../models/Category');
@@ -189,5 +190,43 @@ router.delete('/:id', authAdmin, async (req, res) => {
         res.status(500).json({ msg: 'Lỗi máy chủ', error: err.message });
     }
 });
+
+/**
+ * @swagger
+ * /api/categories/{id}/products:
+ *   get:
+ *     summary: Lấy tất cả sản phẩm trong danh mục theo ID danh mục
+ *     tags: [Categories]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID của danh mục
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Danh sách sản phẩm trong danh mục
+ *       404:
+ *         description: Danh mục không tìm thấy
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+router.get('/:id/products', async (req, res) => {
+    try {
+        const category = await Category.findById(req.params.id);
+        if (!category) {
+            return res.status(404).json({ msg: 'Danh mục không tìm thấy' });
+        }
+
+        // Tìm các sản phẩm trong danh mục này
+        const products = await Product.find({ category: req.params.id });
+        res.json(products); // Trả về danh sách sản phẩm của danh mục
+    } catch (err) {
+        res.status(500).json({ msg: 'Lỗi máy chủ', error: err.message });
+    }
+});
+
+
 
 module.exports = router;

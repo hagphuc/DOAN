@@ -11,22 +11,50 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Badge from '@mui/material/Badge';
 import { useCart } from '../components/CartContext'; // Import CartContext
+import axios from 'axios'; // Import axios để gọi API
 
 const logoUrl = `${process.env.PUBLIC_URL}/logo2.jpg`;
 
 const pages = ['Home', 'Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Giỏ hàng', 'Logout'];
+const settings = ['Profile', 'Account', 'Logout'];
 
 function ResponsiveAppBar() {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElCategory, setAnchorElCategory] = React.useState(null); // Để mở menu danh mục
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [searchTerm, setSearchTerm] = React.useState('');
+  const [categories, setCategories] = React.useState([]); // Lưu danh sách danh mục từ API
+  const [loadingCategories, setLoadingCategories] = React.useState(true); // Trạng thái khi đang lấy dữ liệu
+  const [categoryError, setCategoryError] = React.useState(false); // Lỗi khi lấy danh mục
+
+  // Sử dụng CartContext để lấy số lượng giỏ hàng
   const { cartItems } = useCart();
   const cartQuantity = cartItems.reduce((total, item) => total + item.quantity, 0); // Tính tổng số lượng giỏ hàng
+
+  // Gọi API để lấy danh mục khi component render
+  React.useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/categories'); // Đảm bảo đường dẫn API đúng
+        if (response.data) {
+          setCategories(response.data); // Lưu dữ liệu danh mục vào state
+        }
+      } catch (error) {
+        console.error('Lỗi khi lấy danh mục:', error);
+        setCategoryError(true); // Đánh dấu có lỗi khi lấy danh mục
+      } finally {
+        setLoadingCategories(false); // Dữ liệu đã được tải
+      }
+    };
+
+    fetchCategories(); // Gọi API
+  }, []); // Đảm bảo useEffect chỉ chạy một lần khi component được render lần đầu tiên
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -36,12 +64,16 @@ function ResponsiveAppBar() {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleOpenCartMenu = () => {
-    navigate('/cart'); // Điều hướng đến trang giỏ hàng khi nhấp vào biểu tượng giỏ hàng
+  const handleOpenCategoryMenu = (event) => {
+    setAnchorElCategory(event.currentTarget); // Mở menu danh mục khi nhấn vào "Danh mục"
   };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+
+  const handleCloseCategoryMenu = () => {
+    setAnchorElCategory(null);
   };
 
   const handleCloseUserMenu = () => {
@@ -69,10 +101,21 @@ function ResponsiveAppBar() {
       case 'Home':
         navigate('/dashboard');
         break;
+      case 'Pricing':
+        navigate('/pricing');
+        break;
+      case 'Blog':
+        navigate('/blog');
+        break;
       default:
         break;
     }
     handleCloseNavMenu(); 
+  };
+
+  const handleCategoryClick = (categoryId) => {
+    navigate(`/category/${categoryId}`); // Điều hướng đến trang danh mục
+    handleCloseCategoryMenu(); // Đóng menu danh mục sau khi chọn
   };
 
   return (
@@ -149,6 +192,33 @@ function ResponsiveAppBar() {
                 {page}
               </Button>
             ))}
+
+            {/* Mục danh mục */}
+            <Button
+              onClick={handleOpenCategoryMenu}
+              sx={{ my: 2, color: 'white', display: 'block' }}
+            >
+              Danh mục
+            </Button>
+            <Menu
+              anchorEl={anchorElCategory}
+              open={Boolean(anchorElCategory)}
+              onClose={handleCloseCategoryMenu}
+            >
+              {loadingCategories ? (
+                <MenuItem disabled>Loading categories...</MenuItem>
+              ) : categoryError ? (
+                <MenuItem disabled>Error fetching categories</MenuItem>
+              ) : categories.length > 0 ? (
+                categories.map((category) => (
+                  <MenuItem key={category._id} onClick={() => handleCategoryClick(category._id)}>
+                    {category.name}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem disabled>No categories available</MenuItem>
+              )}
+            </Menu>
           </Box>
 
           <TextField
@@ -164,7 +234,7 @@ function ResponsiveAppBar() {
           <IconButton
             size="large"
             aria-label="shopping cart"
-            onClick={handleOpenCartMenu}
+            onClick={() => navigate('/cart')}
             color="inherit"
           >
             <Badge badgeContent={cartQuantity} color="error">
@@ -203,8 +273,9 @@ function ResponsiveAppBar() {
           </Box>
         </Toolbar>
       </Container>
-    </AppBar> 
+    </AppBar>
   );
 }
 
 export default ResponsiveAppBar;
+

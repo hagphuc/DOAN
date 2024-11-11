@@ -14,6 +14,8 @@ import Footer from './components/Footer';
 import { CartProvider } from './components/CartContext';
 import './App.css';
 import ManageCategories from './components/ManageCategories';
+import CategoryPage from './components/CategoryPage';  // Import CategoryPage component
+
 // Function to check if the user is authenticated
 const isAuthenticated = () => !!localStorage.getItem('token');
 
@@ -52,11 +54,14 @@ function App() {
               <Route path="/admin/manage-users" element={<AdminRoute><ManageUsers /></AdminRoute>} />
               <Route path="/admin/manage-products" element={<AdminRoute><ManageProducts /></AdminRoute>} />
               <Route path="/admin/manage-orders" element={<AdminRoute><ManageOrders /></AdminRoute>} /> {/* New Manage Orders route */}
-              <Route path="/admin/manage-categories" element={<ManageCategories />} />
+              <Route path="/admin/manage-categories" element={<AdminRoute><ManageCategories /></AdminRoute>} />
 
               {/* Product list and product detail routes */}
               <Route path="/products" element={<ProductList />} />
               <Route path="/products/:productId" element={<ProductDetail />} />
+
+              {/* Route for products under a specific category */}
+              <Route path="/category/:categoryId" element={<CategoryPage />} />  {/* New category page route */}
               
               {/* Protected route for cart */}
               <Route path="/cart" element={<PrivateRoute><Cart /></PrivateRoute>} />
