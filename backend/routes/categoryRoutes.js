@@ -1,4 +1,3 @@
-// routes/categoryRoutes.js
 const express = require('express');
 const router = express.Router();
 const Category = require('../models/Category');
@@ -190,6 +189,5 @@ router.delete('/:id', authAdmin, async (req, res) => {
         res.status(500).json({ msg: 'Lỗi máy chủ', error: err.message });
     }
 });
-
 
 module.exports = router;

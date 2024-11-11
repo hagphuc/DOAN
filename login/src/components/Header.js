@@ -11,8 +11,6 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Badge from '@mui/material/Badge';
 import { useCart } from '../components/CartContext'; // Import CartContext
@@ -27,8 +25,6 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [searchTerm, setSearchTerm] = React.useState('');
-
-  // Sử dụng CartContext để lấy số lượng giỏ hàng
   const { cartItems } = useCart();
   const cartQuantity = cartItems.reduce((total, item) => total + item.quantity, 0); // Tính tổng số lượng giỏ hàng
 
@@ -72,12 +68,6 @@ function ResponsiveAppBar() {
     switch(page) {
       case 'Home':
         navigate('/dashboard');
-        break;
-      case 'Pricing':
-        navigate('/pricing');
-        break;
-      case 'Blog':
-        navigate('/blog');
         break;
       default:
         break;
@@ -148,29 +138,6 @@ function ResponsiveAppBar() {
               ))}
             </Menu>
           </Box>
-
-          <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }}>
-            <img src={logoUrl} alt="Flower Shop Logo" style={{ height: 40, width: 40 }} />
-          </Box>
-
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'white',
-              textDecoration: 'none',
-            }}
-          >
-            Flower Shop
-          </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
