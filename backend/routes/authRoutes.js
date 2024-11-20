@@ -123,7 +123,7 @@ router.post('/login', async (req, res) => {
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
 
         // Trả về token và role của người dùng
-        res.json({ token, role: user.role });
+        res.json({ token, role: user.role, username: user.username });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');

@@ -9,6 +9,8 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const cors = require('cors');
 const path = require('path');
 const categoryRoutes = require('./routes/categoryRoutes');
+const statisticsRoutes = require('./routes/statistics');  // Import route thống kê
+
 // Load environment variables
 dotenv.config();
 
@@ -67,6 +69,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes); // New order routes
 app.use('/api/categories', categoryRoutes);
+app.use('/api', statisticsRoutes);  // Đảm bảo '/api' được thêm vào trước route
 
 // Error handling middleware
 app.use((err, req, res, next) => {

@@ -265,7 +265,19 @@ const ManageUsers = () => {
                 </Fab>
             )}
             <HeaderAdmin />
-            <Typography variant="h4" gutterBottom className="title" style={{ marginTop: '80px' }}>
+            <Typography
+                variant="h4"
+                gutterBottom
+                style={{
+                    marginTop: '80px',
+                    fontFamily: "'Poppins', sans-serif",
+                    fontWeight: 600,
+                    background: 'linear-gradient(to right, #f3c9c4, #FFB6C1)', // Gradient màu
+                    WebkitBackgroundClip: 'text', // Clip gradient vào chữ
+                    WebkitTextFillColor: 'transparent', // Làm chữ trong suốt để thấy gradient
+                    textAlign: 'center', // Căn giữa nếu cần
+                }}
+            >
                 Quản Lý Người Dùng
             </Typography>
             <Snackbar
@@ -323,7 +335,7 @@ const ManageUsers = () => {
                         height: '38px'
                     }}
                 >
-                    Xóa User Đã Chọn
+                    Xóa Người Dùng Đã Chọn
                 </Button>
             )}
             <TableContainer component={Paper} className="table-container">

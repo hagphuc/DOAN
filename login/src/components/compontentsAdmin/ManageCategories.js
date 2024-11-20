@@ -10,6 +10,7 @@ import {
     DialogTitle,
     Snackbar,
     Alert,
+    Typography, 
     Accordion,
     AccordionSummary,
     AccordionDetails,
@@ -116,8 +117,21 @@ const CategoryManage = () => {
     return (
         <div className="category-management">
             <HeaderAdmin />
-            <h2 style={{ marginTop: '80px', textAlign: 'center' }}>Quản Lý Danh Mục</h2>
-
+            <Typography
+                variant="h4"
+                gutterBottom
+                style={{
+                    marginTop: '80px',
+                    fontFamily: "'Poppins', sans-serif",
+                    fontWeight: 600,
+                    background: 'linear-gradient(to right, #f3c9c4, #FFB6C1)', // Gradient màu
+                    WebkitBackgroundClip: 'text', // Clip gradient vào chữ
+                    WebkitTextFillColor: 'transparent', // Làm chữ trong suốt để thấy gradient
+                    textAlign: 'center', // Căn giữa nếu cần
+                }}
+            >
+                Quản Lý Danh Mục
+            </Typography>
             <Button
                 variant="contained"
                 color="primary"

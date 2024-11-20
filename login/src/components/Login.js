@@ -13,38 +13,39 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
+    
         // Kiểm tra xem các trường có bị bỏ trống không
         if (!email || !password) {
             setError('Vui lòng nhập đầy đủ thông tin.');
             return;
         }
-
+    
         setLoading(true); // Bắt đầu loading khi nhấn đăng nhập
-
+    
         try {
             const response = await axios.post('http://localhost:5000/api/auth/login', {
                 email,
                 password
             });
-            const { token, role } = response.data;
-
+            const { token, role, username } = response.data; // Lấy token, role và username
+    
             // Lưu trữ token và role trong localStorage
             localStorage.setItem('token', token);
             localStorage.setItem('role', role); // Lưu trữ vai trò
-
+            localStorage.setItem('username', username); // Lưu trữ username vào localStorage
+    
             // Lưu trữ cookie cho token (có thể thêm ngày hết hạn)
-            Cookies.set('token', token, { expires: 7 }); // Lưu token vào cookie, hết hạn sau 7 ngày
-            Cookies.set('role', role, { expires: 7 }); // Lưu role vào cookie, hết hạn sau 7 ngày
-
+            Cookies.set('token', token, { expires: 7 });
+            Cookies.set('role', role, { expires: 7 });
+    
             setError(''); // Xóa thông báo lỗi nếu đăng nhập thành công
             setLoading(false); // Dừng loading khi đăng nhập thành công
-
+    
             // Điều hướng dựa trên vai trò của người dùng
             if (role === 'admin') {
-                navigate('/admin/dashboard'); // Chuyển hướng đến AdminDashboard cho admin
+                navigate('/admin/dashboard');
             } else {
-                navigate('/dashboard'); // Chuyển hướng về trang chủ cho người dùng
+                navigate('/dashboard');
             }
         } catch (error) {
             setLoading(false); // Dừng loading khi có lỗi
@@ -52,7 +53,7 @@ const Login = () => {
             setError(errorMessage);
         }
     };
-
+    
     return (
         <div className="login-container">
             <h1>Đăng Nhập</h1>

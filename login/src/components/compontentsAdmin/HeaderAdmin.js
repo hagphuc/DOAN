@@ -14,14 +14,19 @@ import CategoryIcon from '@mui/icons-material/Category';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MenuIcon from '@mui/icons-material/Menu';
 import ReceiptIcon from '@mui/icons-material/Receipt'; // Icon cho "Manage Orders"
+import Tooltip from '@mui/material/Tooltip';  // Import Tooltip
+import Avatar from '@mui/material/Avatar';    // Import Avatar
 
-const logoUrl = `${process.env.PUBLIC_URL}/logo2.jpg`;
+const logoUrl = `${process.env.PUBLIC_URL}/logo2.jpg`; // Đảm bảo đường dẫn logo chính xác
 const settings = ['Profile', 'Account', 'Logout'];
 
 const HeaderAdmin = () => {
   const navigate = useNavigate();
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [anchorElFunction, setAnchorElFunction] = React.useState(null);
+
+  // Lấy tên người dùng từ localStorage
+  const username = localStorage.getItem('username') || 'Guest';
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -32,9 +37,11 @@ const HeaderAdmin = () => {
   };
 
   const handleLogout = () => {
+    // Xóa thông tin người dùng và token khỏi localStorage
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    navigate('/login');
+    localStorage.removeItem('username');
+    navigate('/login'); // Điều hướng về trang login
   };
 
   const handleOpenFunctionMenu = (event) => {
@@ -66,7 +73,7 @@ const HeaderAdmin = () => {
           >
             <MenuIcon />
           </IconButton>
-          
+
           {/* Logo */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 2 }}>
             <img src={logoUrl} alt="Logo" style={{ height: 40, width: 40 }} />
@@ -113,33 +120,39 @@ const HeaderAdmin = () => {
           </Menu>
 
           {/* Hồ sơ người dùng */}
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="User Avatar" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              anchorEl={anchorElUser}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
+          {/* Avatar người dùng */}
+          <Tooltip title="Open settings">
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, mr: 1 }}>
+              <Avatar alt={username} src="/static/images/avatar/2.jpg" />
+            </IconButton>
+          </Tooltip>
+
+          {/* Menu của người dùng */}
+          <Menu
+            sx={{ mt: '45px' }}
+            anchorEl={anchorElUser}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+            {settings.map((setting) => (
+              <MenuItem
+                key={setting}
+                onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}
+              >
+                <Typography textAlign="center">{setting}</Typography>
+              </MenuItem>
+            ))}
+          </Menu>
+        </Box>
         </Toolbar>
       </Container>
     </AppBar>
