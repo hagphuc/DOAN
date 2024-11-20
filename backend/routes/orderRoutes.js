@@ -9,7 +9,6 @@ const Order = require('../models/Order');
  *   post:
  *     summary: Thêm đơn hàng mới
   *     tags: [Orders]
-
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -125,5 +124,4 @@ router.delete('/:orderId', async (req, res) => {
         res.status(500).json({ success: false, message: 'Lỗi khi xóa đơn hàng' });
     }
 });
-
 module.exports = router;

@@ -226,7 +226,4 @@ router.get('/:id/products', async (req, res) => {
         res.status(500).json({ msg: 'Lỗi máy chủ', error: err.message });
     }
 });
-
-
-
 module.exports = router;

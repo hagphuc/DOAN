@@ -70,7 +70,6 @@ router.get('/:id', authUser, async (req, res) => {
     }
 });
 
-
 /**
  * @swagger
  * /api/products:
@@ -114,14 +113,12 @@ router.post('/', authAdmin, upload.single('image'), async (req, res) => {
             category, // Lưu category
             imageUrl, // Lưu đường dẫn hình ảnh vào cơ sở dữ liệu
         });
-
         const product = await newProduct.save();
         res.status(201).json(product);
     } catch (err) {
         res.status(500).json({ msg: 'Lỗi máy chủ', error: err.message });
     }
 });
-
 
 /**
  * @swagger
@@ -167,7 +164,6 @@ router.put('/:id', authAdmin, upload.single('image'), async (req, res) => {
     try {
         const { name, description, price, category } = req.body;
         const imageUrl = req.file ? req.file.path : undefined; // Lấy đường dẫn hình ảnh (có thể là undefined nếu không có hình ảnh)
-
         const updateData = {
             name,
             description,
@@ -175,7 +171,6 @@ router.put('/:id', authAdmin, upload.single('image'), async (req, res) => {
             category, // Thêm category vào bản cập nhật
             ...(imageUrl && { imageUrl }) // Chỉ cập nhật imageUrl nếu nó có giá trị
         };
-
         const product = await Product.findByIdAndUpdate(req.params.id, updateData, { new: true });
         if (!product) {
             return res.status(404).json({ msg: 'Sản phẩm không tìm thấy' });
@@ -185,7 +180,6 @@ router.put('/:id', authAdmin, upload.single('image'), async (req, res) => {
         res.status(500).json({ msg: 'Lỗi máy chủ', error: err.message });
     }
 });
-
 
 /**
  * @swagger
@@ -216,18 +210,14 @@ router.delete('/:id', authAdmin, async (req, res) => {
         if (!product) {
             return res.status(404).json({ msg: 'Sản phẩm không tìm thấy' });
         }
-
         // Đường dẫn ảnh từ database (phải là đường dẫn tương đối từ 'uploads')
         const relativeImagePath = product.imageUrl;
-
         // Kiểm tra nếu có đường dẫn ảnh trong sản phẩm
         if (relativeImagePath) {
             // Tạo đường dẫn tuyệt đối đến ảnh dựa trên cấu trúc "backend/uploads"
             const absoluteImagePath = path.resolve(__dirname, '..', relativeImagePath);
-
             // In ra console đường dẫn ảnh để kiểm tra
             console.log('Đường dẫn ảnh tuyệt đối:', absoluteImagePath);
-
             // Kiểm tra nếu ảnh tồn tại
             if (fs.existsSync(absoluteImagePath)) {
                 // Ảnh tồn tại, tiến hành xóa
@@ -243,7 +233,6 @@ router.delete('/:id', authAdmin, async (req, res) => {
                 console.log('Ảnh không tồn tại tại đường dẫn:', absoluteImagePath); // Log nếu ảnh không tồn tại
             }
         }
-
         // Xóa sản phẩm khỏi cơ sở dữ liệu
         await Product.findByIdAndDelete(req.params.id);
         res.json({ msg: 'Sản phẩm đã được xóa thành công' });
@@ -252,5 +241,4 @@ router.delete('/:id', authAdmin, async (req, res) => {
         res.status(500).json({ msg: 'Lỗi máy chủ', error: err.message });
     }
 });
-
 module.exports = router;

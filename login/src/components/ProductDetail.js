@@ -118,7 +118,6 @@ const ProductDetail = () => {
                 </div>
                 <div className="info-container">
                     <h1>{product.name}</h1>
-                    <p><strong>Mã sản phẩm:</strong> {product._id}</p>
                     <p><strong>Mô tả:</strong> {product.description}</p>
                     <p className="price"><strong>Giá:</strong> {product.price} VNĐ</p>
                     <div className="quantity-selector">
