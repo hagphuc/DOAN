@@ -3,17 +3,17 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Register from './components/Register';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
-import AdminDashboard from './components/AdminDashboard';
-import ManageUsers from './components/ManageUsers';
-import ManageProducts from './components/ManageProducts';
-import ManageOrders from './components/ManageOrders'; // Import ManageOrders component
+import AdminDashboard from './components/compontentsAdmin/AdminDashboard';
+import ManageUsers from './components/compontentsAdmin/ManageUsers';
+import ManageProducts from './components/compontentsAdmin/ManageProducts';
+import ManageOrders from './components/compontentsAdmin/ManageOrders'; // Import ManageOrders component
 import ProductList from './components/ProductList';
 import ProductDetail from './components/ProductDetail';
 import Cart from './components/Cart';
 import Footer from './components/Footer';
 import { CartProvider } from './components/CartContext';
 import './App.css';
-import ManageCategories from './components/ManageCategories';
+import ManageCategories from './components/compontentsAdmin/ManageCategories';
 import CategoryPage from './components/CategoryPage';  // Import CategoryPage component
 
 // Function to check if the user is authenticated

@@ -353,7 +353,7 @@ const ManageProducts = () => {
                                             src={`http://localhost:5000/${product.imageUrl}`}
                                             alt={product.name}
                                             className="product-image"
-                                            style={{ width: '200px', height: '200px' }}
+                                            style={{ width: '150px', height: '150px' }}
                                         />
                                     </TableCell>
                                     <TableCell>{product.name}</TableCell>

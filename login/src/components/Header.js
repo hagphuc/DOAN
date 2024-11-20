@@ -12,9 +12,10 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Badge from '@mui/material/Badge';
-import { useCart } from '../components/CartContext'; // Import CartContext
+import { useCart } from './CartContext'; // Import useCart hook
 import axios from 'axios'; // Import axios để gọi API
 
 const logoUrl = `${process.env.PUBLIC_URL}/logo2.jpg`;
@@ -27,6 +28,7 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElCategory, setAnchorElCategory] = React.useState(null); // Để mở menu danh mục
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [searchTerm, setSearchTerm] = React.useState('');
   const [categories, setCategories] = React.useState([]); // Lưu danh sách danh mục từ API
   const [loadingCategories, setLoadingCategories] = React.useState(true); // Trạng thái khi đang lấy dữ liệu
   const [categoryError, setCategoryError] = React.useState(false); // Lỗi khi lấy danh mục
@@ -76,6 +78,16 @@ function ResponsiveAppBar() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
+    if (event.key === 'Enter') {
+      navigate(`/search?query=${searchTerm}`); // Điều hướng đến trang tìm kiếm
+    }
   };
 
   const handleLogout = () => {
@@ -209,6 +221,16 @@ function ResponsiveAppBar() {
             </Menu>
           </Box>
 
+          <TextField
+            variant="outlined"
+            size="small"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            onKeyDown={handleSearchSubmit}
+            sx={{ bgcolor: 'white', borderRadius: 1, mx: 2 }}
+          />
+
           <IconButton
             size="large"
             aria-label="shopping cart"
@@ -256,3 +278,4 @@ function ResponsiveAppBar() {
 }
 
 export default ResponsiveAppBar;
+

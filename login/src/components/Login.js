@@ -44,7 +44,7 @@ const Login = () => {
             if (role === 'admin') {
                 navigate('/admin/dashboard'); // Chuyển hướng đến AdminDashboard cho admin
             } else {
-                navigate('/dashboard'); // Nếu là user, chuyển đến trang dashboard
+                navigate('/dashboard'); // Chuyển hướng về trang chủ cho người dùng
             }
         } catch (error) {
             setLoading(false); // Dừng loading khi có lỗi
