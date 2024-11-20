@@ -70,7 +70,6 @@ router.get('/:id', authUser, async (req, res) => {
     }
 });
 
-
 /**
  * @swagger
  * /api/products:

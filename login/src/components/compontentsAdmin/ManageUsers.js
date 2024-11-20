@@ -268,7 +268,6 @@ const ManageUsers = () => {
             <Typography variant="h4" gutterBottom className="title" style={{ marginTop: '80px' }}>
                 Quản Lý Người Dùng
             </Typography>
-
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={5000}
@@ -540,5 +539,4 @@ const ManageUsers = () => {
         </div>
     );
 };
-
 export default ManageUsers;

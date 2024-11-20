@@ -48,7 +48,6 @@ const Login = () => {
             }
         } catch (error) {
             setLoading(false); // Dừng loading khi có lỗi
-            // Kiểm tra lỗi từ server và thiết lập thông báo lỗi phù hợp
             const errorMessage = error.response?.data?.msg || 'Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.';
             setError(errorMessage);
         }
