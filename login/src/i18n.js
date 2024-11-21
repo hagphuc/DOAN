@@ -22,7 +22,6 @@ i18n
   .init({
     resources,
     lng: 'en', // Ngôn ngữ mặc định
-    fallbackLng: 'en',
     interpolation: {
       escapeValue: false,
     }
