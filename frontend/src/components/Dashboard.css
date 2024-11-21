@@ -1,0 +1,71 @@
+/* Cập nhật lại chiều rộng và chiều cao của hình ảnh để đảm bảo cùng kích thước */
+.carousel-img {
+  width: 100%; /* Đảm bảo hình ảnh chiếm hết chiều rộng */
+  height: 500px; /* Đặt chiều cao cố định cho hình ảnh */
+  object-fit: cover; /* Giữ tỷ lệ hình ảnh mà không bị méo, đảm bảo nó phủ hết vùng chứa */
+  border-radius: 8px; /* Bo góc cho hình ảnh */
+}
+
+/* Đảm bảo khi hover vào hình ảnh sẽ phóng to */
+.carousel-img:hover {
+  transform: scale(1.05); /* Phóng to hình ảnh khi hover */
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Cập nhật lại style cho slider */
+.slick-slider {
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1200px; /* Giới hạn chiều rộng tối đa của carousel */
+  overflow: hidden; /* Ẩn phần bên ngoài carousel */
+}
+
+.slick-track {
+  display: flex;
+  justify-content: center; /* Căn giữa tất cả các slide */
+  transition: transform 1s ease; /* Thêm hiệu ứng mượt mà khi chuyển slide */
+}
+
+.slick-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Căn giữa các slide */
+}
+
+.slick-slide img {
+  width: 100%;   /* Đảm bảo hình ảnh có chiều rộng 100% */
+  height: 500px;  /* Đặt chiều cao cố định cho banner */
+  object-fit: cover; /* Giữ tỷ lệ hình ảnh mà không bị méo */
+  border-radius: 8px; /* Bo góc cho hình ảnh */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng cho ảnh để làm nổi bật */
+}
+
+/* Đảm bảo slider responsive trên các thiết bị nhỏ */
+@media (max-width: 768px) {
+  .carousel-img {
+    height: 300px; /* Giảm chiều cao hình ảnh cho các màn hình nhỏ */
+  }
+
+  .slick-slide img {
+    height: 300px; /* Đảm bảo chiều cao hình ảnh trên các màn hình nhỏ */
+  }
+
+  .slick-slider {
+    max-width: 100%; /* Đảm bảo carousel chiếm toàn bộ chiều rộng màn hình nhỏ */
+  }
+}
+
+/* Đảm bảo slider có chiều rộng đầy đủ trên mọi màn hình */
+.dashboard-container .slick-slider {
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Điều chỉnh chiều cao hình ảnh cho các màn hình nhỏ */
+@media (max-width: 768px) {
+  .slick-slide img {
+    width: 100%;
+    height: auto;
+  }
+}

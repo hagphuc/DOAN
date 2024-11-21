@@ -4,7 +4,7 @@
     flex-wrap: wrap; /* Cho phép gói lại trên các màn hình nhỏ */
     align-items: flex-start;
     justify-content: center; /* Giữ mô tả và hình ảnh ở giữa */
-    margin-top: 20px;
+    margin-top: 60px;
     padding: 0 10px;
 }
 

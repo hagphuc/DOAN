@@ -321,7 +321,7 @@ h2 {
 
 .order-status-popup {
     position: fixed;
-    top: 20px; /* Changed from bottom to top */
+    top: 60px; /* Changed from bottom to top */
     right: 20px; /* Right corner */
     background-color: #4caf50; /* Green for success */
     color: white;
@@ -331,6 +331,8 @@ h2 {
     opacity: 0.9;
     z-index: 1000;
     transition: opacity 0.5s ease;
+    margin: 20px auto;
+    text-align: center;
 }
 
 .order-status-popup.error {
@@ -368,6 +370,7 @@ h1 {
     text-align: center;
     color: #333;
     margin-bottom: 20px;
+    margin-top: 60px;
 }
 
 .cart-table {
@@ -476,13 +479,6 @@ h1 {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
-}
-
-.order-status-popup {
-    margin: 20px auto;
-    padding: 10px;
-    border-radius: 5px;
-    text-align: center;
 }
 
 .success {

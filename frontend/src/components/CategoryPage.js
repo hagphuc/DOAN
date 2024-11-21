@@ -8,22 +8,28 @@ const CategoryPage = () => {
     const { categoryId } = useParams();
     const { addToCart } = useCart(); // Remove cartItems since it's not used
     const [products, setProducts] = useState([]);
+    const [category, setCategory] = useState(null);  // Store category data
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchProducts = async () => {
+        const fetchCategoryAndProducts = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/categories/${categoryId}/products`);
-                setProducts(response.data);
+                // Fetch category name based on categoryId
+                const categoryResponse = await axios.get(`http://localhost:5000/api/categories/${categoryId}`);
+                setCategory(categoryResponse.data);  // Store category data
+                
+                // Fetch products for the category
+                const productsResponse = await axios.get(`http://localhost:5000/api/categories/${categoryId}/products`);
+                setProducts(productsResponse.data);
                 setLoading(false);
             } catch (err) {
-                setError('Không thể tải sản phẩm');
+                setError('Không thể tải dữ liệu');
                 setLoading(false);
             }
         };
 
-        fetchProducts();
+        fetchCategoryAndProducts();
     }, [categoryId]);
 
     if (loading) return <p>Đang tải...</p>;
@@ -33,6 +39,13 @@ const CategoryPage = () => {
         <div className="category-page">
             {/* Header component */}
             <Header />
+
+            {/* Title with "Danh sách" and category name */}
+            <div style={{ textAlign: 'center', marginTop: '-50px', marginBottom: '20px' }}>
+                <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#333' }}>
+                    Danh sách {category && category.name}
+                </h1>
+            </div>
 
             {/* Product list */}
             <div className="product-list">
