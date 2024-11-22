@@ -103,6 +103,7 @@ const Register = () => {
                 </div>
             )}
 
+            {/* Thêm liên kết quay về trang đăng nhập */}
             <div className="login-redirect">
                 <p>Bạn đã có tài khoản? <Link to="/login">Đăng nhập</Link></p>
             </div>
